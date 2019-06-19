@@ -1,0 +1,23 @@
+REMAINING TASKS:
+
+(C) 2019-06-19 Finish error handling for getOptionType() function when no match is found in the argument, but the argument is not null.
+(B) 2019-06-19 Format Trading Journal.xlsm
+(A) 2019-06-19 Add a function to determine the posture of the trade (bullish or bearish).
+(A) 2019-06-19 Add a function to parse the ticker symbol from the TOS data string.
+(A) 2019-06-19 Add a function to parse the expiration date from the TOS data string (taking two arguments, the string and the Type to avoid recalculating).
+(A) 2019-06-19 Add a function that searches an API for the high and low data for the ticker symbol given on the date of the trade.
+(A) 2019-06-19 Add a function that calculates the difference between the option expiration and that date of the trade.
+(A) 2019-06-19 Add a function that parses the quantity from the TOS data string.
+(A) 2019-06-19 Add a function that parses the premium from the TOS data string.
+(A) 2019-06-19 Add a function that calculates the max profit of the trade.
+(A) 2019-06-19 Add a function that calculates the risk of the trade.
+(A) 2019-06-19 Add a function that calculates the return on risk ratio for the trade.
+(A) 2019-06-19 Add a function that calculates how many days until expiration an open trade has left.
+(A) 2019-06-19 Add a function that calculates P/L Closed.
+(A) 2019-06-19 Add a function that calculates P/L %.
+(A) 2019-06-19 Add a function that calculates the commissions for a particular trade.
+
+
+FINISHED TASKS (Ctrl+Shift+I for DateTime):
+
+x 2019-06-19 14:31 Write a function that returns the option type of a TOS data string.
