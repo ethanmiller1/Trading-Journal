@@ -7,7 +7,7 @@ Function getOptionType(option_data As String)
     Dim optionType As Variant 
 
     ' Populate array with option types.
-    optionTypes = Array("IRON CONDOR","BUTTERFLY","Calendar","Diagonal","Combo","Vertical","Call","Put")
+    optionTypes = Array("IRON CONDOR","BUTTERFLY","CALENDAR","DIAGONAL","COMBO","VERTICAL","CALL","PUT")
 
     ' Search each option type for a match in the option_data string that indicates the option type.
     For Each optionType In optionTypes
