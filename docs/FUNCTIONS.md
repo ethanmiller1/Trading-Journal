@@ -34,3 +34,12 @@ Supported option strategies currently include:
 
 <a name="getNthWord()"></a>
 ## getNthWord(text, start_num[, num_words])
+
+Returns the nth word in a string. It takes in a string for the first argument, and an integer representing the nth word you would like returned as the second argument. An optional argument is an integer representing the number of words you want returned after the nth word (the default value is `1`).
+
+To parse the date from a Vertical TOS data string, for example, employ the following usage:
+
+``` excel
+=getNthWord("BOT +1 VERTICAL MRK 100 20 OCT 17 65/67.5 CALL @1.13", 6, 3)
+```
+This returns `20 OCT 17`.
