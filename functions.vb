@@ -30,3 +30,35 @@ Function getOptionType(option_data As String)
 ErrorHandl:
     getOptionType = ""
 End Function
+
+Function getNthWord(text As String, start_num As Integer, Optional num_words As Integer=1)
+Dim current_pos As Long
+Dim char_len As Integer
+Dim current_word_num As Integer
+ 
+getNthWord = ""
+current_word_num = 1
+ 
+'Remove leading spaces.
+text = Trim(text)
+
+' Get the number of characters in the text.
+char_len = Len(text)
+
+' Find the character position of the nth word.
+For current_pos = 1 To char_len
+    ' If this is the nth word, concatinate each character until it is no longer the nth + num_words word.
+    If (current_word_num >= start_num) And (current_word_num <= start_num + num_words - 1) Then
+        getNthWord = getNthWord & Mid(text, current_pos, 1)
+    End If
+
+    ' If there is a space after this character, increment the current_word_num by 1.
+    If (Mid(text, current_pos, 1) = " ") Then
+      current_word_num = current_word_num + 1
+    End If
+Next current_pos
+ 
+'Remove the rightmost space.
+getNthWord = Trim(getNthWord)
+ 
+End Function

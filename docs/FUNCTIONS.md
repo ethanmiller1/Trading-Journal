@@ -4,12 +4,12 @@ The Trading Journal workbook has a number of functions built into it that are al
 
 | Built-in Functions                  |                    |       |       |       |
 | ------------------------------------|:-------------------| :-----| :-----| :-----|
-| [getOptionType()](#getOptionType()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
+| [getOptionType()](#getOptionType()) | [getNthWord()](#getNthWord()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 | [exampleFunction()](#exampleFunction())  | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 
 <a name="getOptionType()"></a>
-### getOptionType(string)
+## getOptionType(string)
 Returns a string representing the type of option contract input by the user. Arguments may be a string copied from the thinkorswim platform.
 
 ``` excel
@@ -31,3 +31,6 @@ Supported option strategies currently include:
 |Calendar           |BOT +5 CALENDAR FSLR 100 16 JUN 17/19 MAY 17 25 CALL @.31|
 |Diagonal           |BOT +1 DIAGONAL CRM 100 18 AUG 17/21 JUL 17 87.5/82.5 PUT @2.57|
 |Synthetic          |SOLD -1 COMBO CVX 100 18 AUG 17 105 CALL/PUT @-2.06 LMT [TO OPEN/TO OPEN]|
+
+<a name="getNthWord()"></a>
+## getNthWord(text, start_num[, num_words])
