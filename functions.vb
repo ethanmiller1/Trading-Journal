@@ -21,6 +21,10 @@ Function getOptionType(option_data As String)
     ' If there are no matches in option_data, return null.
     If oType = 0 Then GoTo ErrorHandl
 
+    ' Convert string to sentence case.
+    oType = WorksheetFunction.Proper(oType)
+
+    ' Return option type.
     getOptionType = oType
     Exit Function
 ErrorHandl:
