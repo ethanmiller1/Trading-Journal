@@ -2,9 +2,8 @@
 
 The Trading Journal workbook has a number of functions built into it that are always available. They are listed here in alphabetical order.
 
-**Built-in Functions**
-|                           |                     |       |       |       |
-| -------------             |:-------------------:| -----:| -----:| -----:|
+| Built-in Functions                  |                    |       |       |       |
+| ------------------------------------|:-------------------| :-----| :-----| :-----|
 | [getOptionType()](#getOptionType()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 | [exampleFunction()](#exampleFunction())  | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
