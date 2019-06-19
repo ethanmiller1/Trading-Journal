@@ -1,5 +1,5 @@
 Function getOptionType(option_data As String)
-    ' Error handling.
+    ' If argument is null, return null.
     If option_data = "" Then GoTo ErrorHandl
 
     ' Create array to hold option types.
@@ -18,12 +18,8 @@ Function getOptionType(option_data As String)
         End If
     Next
 
-    ' Example of for loop logic:
-    ' If InStr(option_data, "IRON CONDOR") Then
-    '   optionType = "Iron Condor"
-    ' ElseIf InStr(option_data, "BUTTERFLY")
-    '   optionType = "Butterfly"
-    ' End If
+    ' If there are no matches in option_data, return null.
+    If oType = 0 Then GoTo ErrorHandl
 
     getOptionType = oType
     Exit Function

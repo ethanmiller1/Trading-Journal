@@ -1,6 +1,5 @@
 REMAINING TASKS:
 
-(C) 2019-06-19 Finish error handling for getOptionType() function when no match is found in the argument, but the argument is not null.
 (B) 2019-06-19 Format Trading Journal.xlsm
 (A) 2019-06-19 Add a function to determine the posture of the trade (bullish or bearish).
 (A) 2019-06-19 Add a function to parse the ticker symbol from the TOS data string.
@@ -22,3 +21,4 @@ REMAINING TASKS:
 FINISHED TASKS (Ctrl+Shift+I for DateTime):
 
 x 2019-06-19 14:31 Write a function that returns the option type of a TOS data string.
+x 2019-06-19 15:18 Finish error handling for getOptionType() function when no match is found in the argument, but the argument is not null.
