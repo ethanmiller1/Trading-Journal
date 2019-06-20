@@ -144,7 +144,6 @@ Function getStrategy(trade_order As String, option_type As String)
       End If
 
     Select Case option_type
-    ' Match strategy to posture.
     Case "Vertical", "Diagonal"
      ' Concatenate market position, option side, and option type to determine strategy.
       strategy = position & " " & side &  " " & option_type
@@ -162,4 +161,25 @@ Function getStrategy(trade_order As String, option_type As String)
     Exit Function
 ErrorHandl:
     getStrategy = ""
+End Function
+
+Function getPosture(option_strategy As String)
+    ' If argument is null, return null.
+    If option_strategy = "" Then GoTo ErrorHandl
+
+    Select Case option_strategy
+    ' Match option strategy to its corresponding market posture.
+    Case "Iron Condor", "Calendar", "Butterfly"
+      posture = "Neutral"
+    Case "Long Call", "Short Put", "Long Call Vertical", "Short Put Vertical", "Long Call Diagonal", "Long Synthetic"
+      posture = "Bullish"
+    Case "Short Call", "Long Put", "Long Put Diagonal", "Short Synthetic"
+      posture = "Bearish"
+    End Select
+
+    ' Return the posture of the trade.
+    getPosture = posture
+    Exit Function
+ErrorHandl:
+    getPosture = ""
 End Function

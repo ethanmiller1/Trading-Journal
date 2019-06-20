@@ -5,7 +5,7 @@ The Trading Journal workbook has a number of functions built into it that are al
 | Built-in Functions                  |                    |       |       |       |
 | ------------------------------------|:-------------------| :-----| :-----| :-----|
 | [getOptionType()](#getOptionType()) | [getNthWord()](#getNthWord()) | [getExpiration()](#getExpiration()) | [getSymbol()](#getSymbol()) | [daysTillExp()](#daysTillExp()) |
-| [getStrategy()](#getStrategy())  | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
+| [getStrategy()](#getStrategy())  | [getPosture()](#getPosture()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 
 <a name="getOptionType()"></a>
@@ -78,4 +78,13 @@ Returns a string representing the option strategy of a TOS order. The first argu
 
 ``` excel
 =getStrategy("BOT +1 DIAGONAL CRM 100 18 AUG 17/21 JUL 17 87.5/82.5 PUT @2.57", "Diagonal")
+```
+
+<a name="getPosture()"></a>
+## getPosture(trade_order, option_type)
+
+Returns a string representing the market posture of a TOS order (bullish, bearish, or neutral). Arguments may be a string returned by the getStrategy() function. The following usage would return `Bearish`.
+
+``` excel
+=getPosture("Long Put")
 ```
