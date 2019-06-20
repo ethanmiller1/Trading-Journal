@@ -4,12 +4,12 @@ The Trading Journal workbook has a number of functions built into it that are al
 
 | Built-in Functions                  |                    |       |       |       |
 | ------------------------------------|:-------------------| :-----| :-----| :-----|
-| [getOptionType()](#getOptionType()) | [getNthWord()](#getNthWord()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
+| [getOptionType()](#getOptionType()) | [getNthWord()](#getNthWord()) | [getExpiration()](#getExpiration()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 | [exampleFunction()](#exampleFunction())  | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 
 <a name="getOptionType()"></a>
-## getOptionType(string)
+## getOptionType(text)
 Returns a string representing the type of option contract input by the user. Arguments may be a string copied from the thinkorswim platform.
 
 ``` excel
@@ -43,3 +43,12 @@ To parse the date from a Vertical TOS data string, for example, employ the follo
 =getNthWord("BOT +1 VERTICAL MRK 100 20 OCT 17 65/67.5 CALL @1.13", 6, 3)
 ```
 This returns `20 OCT 17`.
+
+<a name="getExpiration()"></a>
+## getExpiration(option_data, option_type)
+
+Returns the expiration date from a TOS data string passed in by the user. Arguments may be a TOS data string and a string representing the option type being evaluated. The following usage would return `10/20/2017`.
+
+``` excel
+=getExpiration("BOT +1 VERTICAL MRK 100 20 OCT 17 65/67.5 CALL @1.13","Vertical")
+```

@@ -62,3 +62,31 @@ Next current_pos
 getNthWord = Trim(getNthWord)
  
 End Function
+
+Function getExpiration(option_data As String, option_type As String)
+    Select Case option_type
+    ' If option type matches case strings, return the 6th-8th word.
+    Case "Combo", "Vertical", "Butterfly"
+      expDate = getNthWord(option_data, 6, 3)
+    ' If option type matches case strings, parse the 8th word and return it with the 9th and 10th word concatenated.
+    Case "Diagonal", "Calendar"
+      expDay = getNthWord(option_data, 8)
+      expDay = Split(expDay, "/")
+      expDate = expDay(1) & " " & getNthWord(option_data, 9, 2)
+    ' If option type matches case strings, return the 5th-7th word.
+    Case "Call", "Put"
+      expDate = getNthWord(option_data,5,3)
+    ' If option type is an Iron Condor, return the 7th-9th word.
+    Case "Iron Condor"
+      expDate = getNthWord(option_data,7,3)
+    ' If there is no match, return null.
+    Case Else
+      GoTo ErrorHandl
+    End Select
+
+    ' Return the concatonated string as a date value.
+    getExpiration = DateValue(expDate)
+    Exit Function
+ErrorHandl:
+    getExpiration = ""
+End Function
