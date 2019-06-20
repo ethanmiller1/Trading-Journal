@@ -1,6 +1,6 @@
-Function getOptionType(option_data As String)
+Function getOptionType(trade_order As String)
     ' If argument is null, return null.
-    If option_data = "" Then GoTo ErrorHandl
+    If trade_order = "" Then GoTo ErrorHandl
 
     ' Create array to hold option types.
     Dim optionTypes As Variant
@@ -9,16 +9,16 @@ Function getOptionType(option_data As String)
     ' Populate array with option types.
     optionTypes = Array("IRON CONDOR","BUTTERFLY","CALENDAR","DIAGONAL","COMBO","VERTICAL","CALL","PUT")
 
-    ' Search each option type for a match in the option_data string that indicates the option type.
+    ' Search each option type for a match in the trade_order string that indicates the option type.
     For Each optionType In optionTypes
         ' InStr returns the position of the matching keyword in the string. If the return is 0, no match was found.
-        If InStr(option_data, optionType) Then
+        If InStr(trade_order, optionType) Then
             oType = optionType
             Exit For
         End If
     Next
 
-    ' If there are no matches in option_data, return null.
+    ' If there are no matches in trade_order, return null.
     If oType = 0 Then GoTo ErrorHandl
 
     ' Convert string to sentence case.
@@ -63,22 +63,22 @@ getNthWord = Trim(getNthWord)
  
 End Function
 
-Function getExpiration(option_data As String, option_type As String)
+Function getExpiration(trade_order As String, option_type As String)
     Select Case option_type
     ' If option type matches case strings, return the 6th-8th word.
     Case "Combo", "Vertical", "Butterfly"
-      expDate = getNthWord(option_data, 6, 3)
+      expDate = getNthWord(trade_order, 6, 3)
     ' If option type matches case strings, parse the 8th word and return it with the 9th and 10th word concatenated.
     Case "Diagonal", "Calendar"
-      expDay = getNthWord(option_data, 8)
+      expDay = getNthWord(trade_order, 8)
       expDay = Split(expDay, "/")
-      expDate = expDay(1) & " " & getNthWord(option_data, 9, 2)
+      expDate = expDay(1) & " " & getNthWord(trade_order, 9, 2)
     ' If option type matches case strings, return the 5th-7th word.
     Case "Call", "Put"
-      expDate = getNthWord(option_data,5,3)
+      expDate = getNthWord(trade_order,5,3)
     ' If option type is an Iron Condor, return the 7th-9th word.
     Case "Iron Condor"
-      expDate = getNthWord(option_data,7,3)
+      expDate = getNthWord(trade_order,7,3)
     ' If there is no match, return null.
     Case Else
       GoTo ErrorHandl
@@ -91,19 +91,19 @@ ErrorHandl:
     getExpiration = ""
 End Function
 
-Function getSymbol(option_data As String, option_type As String)
+Function getSymbol(trade_order As String, option_type As String)
     ' If argument is null, return null.
-    If option_data = "" Then GoTo ErrorHandl
+    If trade_order = "" Then GoTo ErrorHandl
     
     Select Case option_type
     ' If option type is an Iron Condor, return the 5th word.
     Case "Iron Condor"
-      Symbol = getNthWord(option_data, 5)
+      Symbol = getNthWord(trade_order, 5)
     ' Otherwise return the 4th word.
     Case "Call", "Put"
-      Symbol = getNthWord(option_data, 3)
+      Symbol = getNthWord(trade_order, 3)
     Case Else
-      Symbol = getNthWord(option_data, 4)
+      Symbol = getNthWord(trade_order, 4)
     End Select
 
     ' Return the concatonated string as a date value.

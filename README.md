@@ -20,3 +20,18 @@ The easiest way to access this Trading Journal is simply to download the `Tradin
 1. Copy and paste the code from `functions.vb` into the created `Module1` module.
 
 ![](https://github.com/king-melchizedek/Trading-Journal/raw/master/images/module1.gif)
+
+## Enable function intellisense
+
+Take the following steps to get function tooltips to top up as you're writing them.
+
+1. Download and open the [`ExcelDna.IntelliSense64.xll`](https://github.com/Excel-DNA/IntelliSense/releases/download/v1.1.0/ExcelDna.IntelliSense64.xll) add-in from the Excel-DNA IntelliSense [Releases](https://github.com/Excel-DNA/IntelliSense/releases) page (under "Assets"). (Note: use `ExcelDna.IntelliSense.xll` if your Excel version is 32-bit. Check at `File` > `Account` > `About Excel`.)
+1. Open Excel and navigate to `Developer` > `Excel Add-ins` > `Browse` and select ExcelDna.IntelliSense64.xll from the Windows Explorer.
+
+![](https://github.com/king-melchizedek/Trading-Journal/raw/master/images/intellisenseAddIn.gif)
+
+3. Create a new Worksheet with the name "\_IntelliSense_", and fill in function descriptions as instructed on the [Getting Started](https://github.com/Excel-DNA/IntelliSense/wiki/Getting-Started) page.
+
+![](https://github.com/king-melchizedek/Trading-Journal/raw/master/images/customIntellisense.gif)
+
+(Note: Excel must be restarted before changes made to function descriptions will take effect. Be sure to check out the [VBASamples](https://github.com/Excel-DNA/IntelliSense/tree/master/VBASamples) page if you get stuck.)

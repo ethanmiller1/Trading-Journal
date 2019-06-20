@@ -25,3 +25,4 @@ x 2019-06-19 22:10 Add a function to parse the expiration date from the TOS data
 x 2019-06-19 22:59 Display only the month of a date.
 x 2019-06-19 23:27 Add a function to parse the ticker symbol from the TOS data string.
 x 2019-06-20 00:04 Add a function that calculates the difference between the option expiration and that date of the trade.
+x 2019-06-20 11:53 Add intellisense to custom functions
