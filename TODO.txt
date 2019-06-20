@@ -2,7 +2,6 @@ REMAINING TASKS:
 
 (A) 2019-06-19 Add a function to determine the posture of the trade (bullish or bearish).
 (A) 2019-06-19 Add a function that searches an API for the high and low data for the ticker symbol given on the date of the trade.
-(A) 2019-06-19 Add a function that calculates the difference between the option expiration and that date of the trade.
 (A) 2019-06-19 Add a function that parses the quantity from the TOS data string.
 (A) 2019-06-19 Add a function that parses the premium from the TOS data string.
 (A) 2019-06-19 Add a function that calculates the max profit of the trade.
@@ -25,3 +24,4 @@ x 2019-06-19 18:08 Add function that gets the nth word of a string.
 x 2019-06-19 22:10 Add a function to parse the expiration date from the TOS data string (taking two arguments, the string and the Type to avoid recalculating).
 x 2019-06-19 22:59 Display only the month of a date.
 x 2019-06-19 23:27 Add a function to parse the ticker symbol from the TOS data string.
+x 2019-06-20 00:04 Add a function that calculates the difference between the option expiration and that date of the trade.

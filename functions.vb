@@ -112,3 +112,15 @@ Function getSymbol(option_data As String, option_type As String)
 ErrorHandl:
     getSymbol = ""
 End Function
+
+Function daysTillExp(trade_date As Date, expiration_date As Date)
+    ' If argument is null, return null.
+    ' TODO: Handle #VALUE error from wrong datatype.
+    If trade_date = 0 Then GoTo ErrorHandl
+
+    ' Return the concatonated string as a date value.
+    daysTillExp = expiration_date - trade_date
+    Exit Function
+ErrorHandl:
+    daysTillExp = ""
+End Function

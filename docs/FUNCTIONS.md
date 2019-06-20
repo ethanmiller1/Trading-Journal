@@ -4,7 +4,7 @@ The Trading Journal workbook has a number of functions built into it that are al
 
 | Built-in Functions                  |                    |       |       |       |
 | ------------------------------------|:-------------------| :-----| :-----| :-----|
-| [getOptionType()](#getOptionType()) | [getNthWord()](#getNthWord()) | [getExpiration()](#getExpiration()) | [getSymbol()](#getSymbol()) | [exampleFunction()](#exampleFunction()) |
+| [getOptionType()](#getOptionType()) | [getNthWord()](#getNthWord()) | [getExpiration()](#getExpiration()) | [getSymbol()](#getSymbol()) | [daysTillExp()](#daysTillExp()) |
 | [exampleFunction()](#exampleFunction())  | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 
@@ -60,4 +60,13 @@ Returns a ticker symbol. The first argument is a TOS data string and the second 
 
 ``` excel
 =getSymbol("BOT +1 FAST 100 16 FEB 18 55 PUT @1.75 LMT", "Put")
+```
+
+<a name="daysTillExp()"></a>
+## daysTillExp(trade_date, expiration_date)
+
+Returns an integer representing the number of days the trade date was removed from the expiration date when it was opened. Both arguments are a date. The following usage would return `28`.
+
+``` excel
+=daysTillExp("1/19/2018", "2/16/2018")
 ```
