@@ -124,3 +124,42 @@ Function daysTillExp(trade_date As Date, expiration_date As Date)
 ErrorHandl:
     daysTillExp = ""
 End Function
+
+Function getStrategy(trade_order As String, option_type As String)
+    ' If argument is null, return null.
+    If trade_order = "" Then GoTo ErrorHandl
+
+      ' Test market position.
+      If InStr(trade_order, "BOT") Then
+        position = "Long"
+      Else
+        position = "Short"
+      End If
+
+      ' Test option type.
+      If InStr(trade_order, "CALL") Then
+        side = "Call"
+      ElseIf InStr(trade_order, "PUT") Then
+        side = "Put"
+      End If
+
+    Select Case option_type
+    ' Match strategy to posture.
+    Case "Vertical", "Diagonal"
+     ' Concatenate market position, option side, and option type to determine strategy.
+      strategy = position & " " & side &  " " & option_type
+    Case "Call", "Put"
+      strategy = position & " " & option_type
+    Case "Combo"
+      strategy = position & " Synthetic"
+    Case Else
+      ' For Iron Condor, Butterfly, and Calendar.
+      strategy = option_type
+    End Select
+
+    ' Return the concatonated string as a date value.
+    getStrategy = strategy
+    Exit Function
+ErrorHandl:
+    getStrategy = ""
+End Function

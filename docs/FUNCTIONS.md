@@ -5,7 +5,7 @@ The Trading Journal workbook has a number of functions built into it that are al
 | Built-in Functions                  |                    |       |       |       |
 | ------------------------------------|:-------------------| :-----| :-----| :-----|
 | [getOptionType()](#getOptionType()) | [getNthWord()](#getNthWord()) | [getExpiration()](#getExpiration()) | [getSymbol()](#getSymbol()) | [daysTillExp()](#daysTillExp()) |
-| [exampleFunction()](#exampleFunction())  | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
+| [getStrategy()](#getStrategy())  | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 
 <a name="getOptionType()"></a>
@@ -45,7 +45,7 @@ To parse the date from a Vertical TOS data string, for example, employ the follo
 This returns `20 OCT 17`.
 
 <a name="getExpiration()"></a>
-## getExpiration(option_data, option_type)
+## getExpiration(trade_order, option_type)
 
 Returns the expiration date from a TOS data string passed in by the user. Arguments may be a TOS data string and a string representing the option type being evaluated. The following usage would return `10/20/2017`.
 
@@ -54,7 +54,7 @@ Returns the expiration date from a TOS data string passed in by the user. Argume
 ```
 
 <a name="getSymbol()"></a>
-## getSymbol(option_data, option_type)
+## getSymbol(trade_order, option_type)
 
 Returns a ticker symbol. The first argument is a TOS data string and the second is a string representing the option type being evaluated. The following usage would return `FAST`.
 
@@ -65,8 +65,17 @@ Returns a ticker symbol. The first argument is a TOS data string and the second 
 <a name="daysTillExp()"></a>
 ## daysTillExp(trade_date, expiration_date)
 
-Returns an integer representing the number of days the trade date was removed from the expiration date when it was opened. Both arguments are a date. The following usage would return `28`.
+Returns an integer representing the number of days the order expiration was removed from the date your TOS order was filled. Both arguments are a date. The following usage would return `28`.
 
 ``` excel
 =daysTillExp("1/19/2018", "2/16/2018")
+```
+
+<a name="getStrategy()"></a>
+## getStrategy(trade_order, option_type)
+
+Returns a string representing the option strategy of a TOS order. The first argument is a TOS order and the second is a string representing the option type being evaluated. The following usage would return `Long Put Diagonal`.
+
+``` excel
+=getStrategy("BOT +1 DIAGONAL CRM 100 18 AUG 17/21 JUL 17 87.5/82.5 PUT @2.57", "Diagonal")
 ```
