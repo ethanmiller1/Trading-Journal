@@ -81,7 +81,7 @@ Returns a string representing the option strategy of a TOS order. The first argu
 ```
 
 <a name="getPosture()"></a>
-## getPosture(trade_order, option_type)
+## getPosture(option_strategy)
 
 Returns a string representing the market posture of a TOS order (bullish, bearish, or neutral). Arguments may be a string returned by the getStrategy() function. The following usage would return `Bearish`.
 

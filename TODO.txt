@@ -11,7 +11,7 @@ REMAINING TASKS:
 (A) 2019-06-19 Add a function that calculates P/L Closed.
 (A) 2019-06-19 Add a function that calculates P/L %.
 (A) 2019-06-19 Add a function that calculates the commissions for a particular trade.
-(C) Change Exp cell format to all caps.
+(C) 2019-06-20 Change Exp cell format to all caps.
 
 
 FINISHED TASKS (Ctrl+Shift+I for DateTime):
@@ -28,3 +28,4 @@ x 2019-06-20 00:04 Add a function that calculates the difference between the opt
 x 2019-06-20 11:53 Add intellisense to custom functions.
 x 2019-06-20 14:10 Add a function to get the option strategy of a TOS order.
 x 2019-06-20 14:34 Add a function to get market posture (technical posture, trend)
+x 2019-06-20 16:09 Format column A to indicate market posture of TOS order.
