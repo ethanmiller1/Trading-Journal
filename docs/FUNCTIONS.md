@@ -4,7 +4,7 @@ The Trading Journal workbook has a number of functions built into it that are al
 
 | Built-in Functions                  |                    |       |       |       |
 | ------------------------------------|:-------------------| :-----| :-----| :-----|
-| [getOptionType()](#getOptionType()) | [getNthWord()](#getNthWord()) | [getExpiration()](#getExpiration()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
+| [getOptionType()](#getOptionType()) | [getNthWord()](#getNthWord()) | [getExpiration()](#getExpiration()) | [getSymbol()](#getSymbol()) | [exampleFunction()](#exampleFunction()) |
 | [exampleFunction()](#exampleFunction())  | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 
@@ -51,4 +51,13 @@ Returns the expiration date from a TOS data string passed in by the user. Argume
 
 ``` excel
 =getExpiration("BOT +1 VERTICAL MRK 100 20 OCT 17 65/67.5 CALL @1.13","Vertical")
+```
+
+<a name="getSymbol()"></a>
+## getSymbol(option_data, option_type)
+
+Returns a ticker symbol. The first argument is a TOS data string and the second is a string representing the option type being evaluated. The following usage would return `FAST`.
+
+``` excel
+=getSymbol("BOT +1 FAST 100 16 FEB 18 55 PUT @1.75 LMT", "Put")
 ```

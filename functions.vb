@@ -90,3 +90,25 @@ Function getExpiration(option_data As String, option_type As String)
 ErrorHandl:
     getExpiration = ""
 End Function
+
+Function getSymbol(option_data As String, option_type As String)
+    ' If argument is null, return null.
+    If option_data = "" Then GoTo ErrorHandl
+    
+    Select Case option_type
+    ' If option type is an Iron Condor, return the 5th word.
+    Case "Iron Condor"
+      Symbol = getNthWord(option_data, 5)
+    ' Otherwise return the 4th word.
+    Case "Call", "Put"
+      Symbol = getNthWord(option_data, 3)
+    Case Else
+      Symbol = getNthWord(option_data, 4)
+    End Select
+
+    ' Return the concatonated string as a date value.
+    getSymbol = Symbol
+    Exit Function
+ErrorHandl:
+    getSymbol = ""
+End Function
