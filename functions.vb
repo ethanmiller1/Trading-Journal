@@ -250,3 +250,29 @@ Function getQuoteValue(quote_key As String, stock_quote As String)
 ErrorHandl:
     getQuoteValue = ""
 End Function
+
+Function getPrem(trade_order As String, option_type As String)
+    ' If argument is null, return null.
+    If trade_order = "" Then GoTo ErrorHandl
+    
+    ' Get the nth word based on option type.
+    Select Case option_type
+    Case "Iron Condor"
+      premium = getNthWord(trade_order, 12)
+    Case "Calendar", "Diagonal"
+      premium = getNthWord(trade_order, 13)
+    Case "Call", "Put"
+      premium = getNthWord(trade_order, 10)
+    Case Else
+      premium = getNthWord(trade_order, 11)
+    End Select
+
+    ' Remove @ symbol and add 0 to cast as numeric.
+    premium = Replace(premium,"@","") + 0
+
+    ' Return the option premium.
+    getPrem = premium
+    Exit Function
+ErrorHandl:
+    getPrem = ""
+End Function

@@ -5,7 +5,7 @@ The Trading Journal workbook has a number of functions built into it that are al
 | Built-in Functions                  |                    |       |       |       |
 | ------------------------------------|:-------------------| :-----| :-----| :-----|
 | [getOptionType()](#getOptionType()) | [getNthWord()](#getNthWord()) | [getExpiration()](#getExpiration()) | [getSymbol()](#getSymbol()) | [daysTillExp()](#daysTillExp()) |
-| [getStrategy()](#getStrategy())  | [getPosture()](#getPosture()) | [getStockQuote()](#getStockQuote()) | [getQuoteValue()](#getQuoteValue()) | [exampleFunction()](#exampleFunction()) |
+| [getStrategy()](#getStrategy())  | [getPosture()](#getPosture()) | [getStockQuote()](#getStockQuote()) | [getQuoteValue()](#getQuoteValue()) | [getPrem()](#getPrem()) |
 | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 
 <a name="getOptionType()"></a>
@@ -140,3 +140,12 @@ Valid keys are:
 |changePercent|
 |label|
 |changeOverTime|
+
+<a name="getPrem()"></a>
+## getPrem(trade_order, option_type)
+
+Returns a double representing the option premium of a TOS order. The first argument is a TOS order and the second is a string representing the option type being evaluated. The following usage would return `1.75`.
+
+``` excel
+=getPrem("BOT +1 FAST 100 16 FEB 18 55 CALL @1.75 LMT", "Call")
+```
