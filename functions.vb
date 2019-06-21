@@ -183,3 +183,52 @@ Function getPosture(option_strategy As String)
 ErrorHandl:
     getPosture = ""
 End Function
+
+Function getStockQuote(symobol As String, trade_date As Date)
+    ' If argument is null, return null.
+    If symobol = "" Then GoTo ErrorHandl
+    
+    ' Get date as YYYYMMDD.
+    dateAsString = Replace(Format(trade_date, "yyyy/mm/dd"), "/", "")
+
+    ' Define iex's defaul strings.
+    site = "https://sandbox.iexapis.com/stable/stock/"
+    Chart = "/chart/"
+    byDate = "/chart/date/"
+    chartByDate = "?chartByDay=true"
+    token = "?token=Tpk_46cc7266d1374035bb1cb11d639476c4"
+
+    ' Create array to hold acceptable range parameters.
+    Dim ranges As Variant
+    Dim range As Variant
+
+    ' Populate array with range values.
+    ' TODO: Test to see if date falls within range, and use select it accordingly.
+    ranges = Array("5d", "1m", "3m", "6m", "1y", "2y", "5y", "max")
+
+    ' Concatonate strings to formulate url.
+    ' TODO: Troubleshoot chartByDate booleon failure and use it instead of a range (see documentation).
+    Url = site & symobol & Chart & ranges(5) & token
+
+    ' Get json object from url.
+    Set objHTTP = CreateObject("MSXML2.ServerXMLHTTP")
+    objHTTP.Open "GET", Url, False
+    objHTTP.send
+    
+    ' Format date to search the JSON by.
+    dateHyphenated = Format(trade_date, "yyyy-mm-dd")
+    regPattern = "(({""date"":"")" & dateHyphenated & "[^}]*})"
+
+    ' Use regex to isolate singe stock quote.
+    Set regex = CreateObject("VBScript.RegExp"): regex.Pattern = regPattern: regex.Global = False
+    Set matches = regex.Execute(objHTTP.responseText)
+    stockQuote = matches(0)
+
+    ' TODO: hande #VALUE error due to no regex matches.
+
+    ' Return the stock quote.
+    getStockQuote = stockQuote
+    Exit Function
+ErrorHandl:
+    getStockQuote = ""
+End Function

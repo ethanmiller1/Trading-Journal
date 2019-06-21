@@ -1,7 +1,5 @@
 REMAINING TASKS:
 
-(A) 2019-06-19 Add a function to determine the posture of the trade (bullish or bearish).
-(A) 2019-06-19 Add a function that searches an API for the high and low data for the ticker symbol given on the date of the trade.
 (A) 2019-06-19 Add a function that parses the quantity from the TOS data string.
 (A) 2019-06-19 Add a function that parses the premium from the TOS data string.
 (A) 2019-06-19 Add a function that calculates the max profit of the trade.
@@ -12,6 +10,7 @@ REMAINING TASKS:
 (A) 2019-06-19 Add a function that calculates P/L %.
 (A) 2019-06-19 Add a function that calculates the commissions for a particular trade.
 (C) 2019-06-20 Change Exp cell format to all caps.
+(B) 2019-06-20 Add a function to get market posture (technical posture, trend)
 
 
 FINISHED TASKS (Ctrl+Shift+I for DateTime):
@@ -27,5 +26,6 @@ x 2019-06-19 23:27 Add a function to parse the ticker symbol from the TOS data s
 x 2019-06-20 00:04 Add a function that calculates the difference between the option expiration and that date of the trade.
 x 2019-06-20 11:53 Add intellisense to custom functions.
 x 2019-06-20 14:10 Add a function to get the option strategy of a TOS order.
-x 2019-06-20 14:34 Add a function to get market posture (technical posture, trend)
+(A) 2019-06-19 14:34 Add a function to determine the posture of the trade (bullish or bearish).
 x 2019-06-20 16:09 Format column A to indicate market posture of TOS order.
+x 2019-06-21 15:10 Add a function that searches an API for the high and low data for the ticker symbol given on the date of the trade.

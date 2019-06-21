@@ -5,7 +5,7 @@ The Trading Journal workbook has a number of functions built into it that are al
 | Built-in Functions                  |                    |       |       |       |
 | ------------------------------------|:-------------------| :-----| :-----| :-----|
 | [getOptionType()](#getOptionType()) | [getNthWord()](#getNthWord()) | [getExpiration()](#getExpiration()) | [getSymbol()](#getSymbol()) | [daysTillExp()](#daysTillExp()) |
-| [getStrategy()](#getStrategy())  | [getPosture()](#getPosture()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
+| [getStrategy()](#getStrategy())  | [getPosture()](#getPosture()) | [getStockQuote()](#getStockQuote()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 
 <a name="getOptionType()"></a>
@@ -88,3 +88,26 @@ Returns a string representing the market posture of a TOS order (bullish, bearis
 ``` excel
 =getPosture("Long Put")
 ```
+
+<a name="getStockQuote()"></a>
+## getStockQuote(option_strategy)
+
+Returns a JSON stock quote. The first argument is a string representing a companies ticker symbol, and the second argument is the date you want to query. The following usage would return `{"date":"2018-01-19","uClose":54.06,"uOpen":53.7,"uHigh":54,"uLow":54.09,"uVolume":3605678,"close":27.07,"open":27.76,"high":27.11,"low":27.14,"volume":7067646,"change":0.2368,"changePercent":0.8807,"label":"Jan 19, 18","changeOverTime":0.26904}`.
+
+``` excel
+=getStockQuote("FAST","1/19/2018")
+```
+
+Note: this function is currently set to query stock quotes up to 2 years in the past. This can be changed by altering the Url variable to use a different element in the ranges array. Press `Alt+F11` to open VBA, select module1, and look for the `getStockQuote()` function. Possible arguments include:
+
+``` vb
+ranges = Array("5d", "1m", "3m", "6m", "1y", "2y", "5y", "max")
+```
+
+This function uses [iexcloud's API](https://iexcloud.io/console/search) to pull stock data. Alternative API's are available to use:
+
+1. [iexcloud](https://iexcloud.io/console/search)
+1. [Intrinio](https://intrinio.com/)
+1. [TD Ameritrade](https://www.reddit.com/r/algotrading/comments/914q22/successful_access_to_td_ameritrade_api/)
+
+Be sure to review the [documentation](https://iexcloud.io/docs/api/#historical-prices) for iex cloud's historical prices api.
