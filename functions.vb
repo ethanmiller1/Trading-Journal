@@ -219,7 +219,7 @@ Function getStockQuote(symobol As String, trade_date As Date)
     dateHyphenated = Format(trade_date, "yyyy-mm-dd")
     regPattern = "(({""date"":"")" & dateHyphenated & "[^}]*})"
 
-    ' Use regex to isolate singe stock quote.
+    ' Use regex to isolate single stock quote.
     Set regex = CreateObject("VBScript.RegExp"): regex.Pattern = regPattern: regex.Global = False
     Set matches = regex.Execute(objHTTP.responseText)
     stockQuote = matches(0)
@@ -231,4 +231,22 @@ Function getStockQuote(symobol As String, trade_date As Date)
     Exit Function
 ErrorHandl:
     getStockQuote = ""
+End Function
+
+Function getQuoteValue(quote_key As String, stock_quote As String)
+    ' If argument is null, return null.
+    If stock_quote = "" Then GoTo ErrorHandl
+
+    ' Concatonate desired JSON key with regex commands to trap the value in a capturing group.
+    regPattern = """" & quote_key & """:([^,]*)"
+
+    ' Use regex to return the value of the key passed in.
+    Set regex = CreateObject("VBScript.RegExp"): regex.Pattern = regPattern: regex.Global = False
+    Set matches = regex.Execute(stock_quote)
+    quoteValue = matches(0).SubMatches(0)
+
+    getQuoteValue = quoteValue
+    Exit Function
+ErrorHandl:
+    getQuoteValue = ""
 End Function

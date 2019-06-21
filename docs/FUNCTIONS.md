@@ -5,7 +5,7 @@ The Trading Journal workbook has a number of functions built into it that are al
 | Built-in Functions                  |                    |       |       |       |
 | ------------------------------------|:-------------------| :-----| :-----| :-----|
 | [getOptionType()](#getOptionType()) | [getNthWord()](#getNthWord()) | [getExpiration()](#getExpiration()) | [getSymbol()](#getSymbol()) | [daysTillExp()](#daysTillExp()) |
-| [getStrategy()](#getStrategy())  | [getPosture()](#getPosture()) | [getStockQuote()](#getStockQuote()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
+| [getStrategy()](#getStrategy())  | [getPosture()](#getPosture()) | [getStockQuote()](#getStockQuote()) | [getQuoteValue()](#getQuoteValue()) | [exampleFunction()](#exampleFunction()) |
 | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 
 <a name="getOptionType()"></a>
@@ -90,9 +90,9 @@ Returns a string representing the market posture of a TOS order (bullish, bearis
 ```
 
 <a name="getStockQuote()"></a>
-## getStockQuote(option_strategy)
+## getStockQuote(symobol, date)
 
-Returns a JSON stock quote. The first argument is a string representing a companies ticker symbol, and the second argument is the date you want to query. The following usage would return `{"date":"2018-01-19","uClose":54.06,"uOpen":53.7,"uHigh":54,"uLow":54.09,"uVolume":3605678,"close":27.07,"open":27.76,"high":27.11,"low":27.14,"volume":7067646,"change":0.2368,"changePercent":0.8807,"label":"Jan 19, 18","changeOverTime":0.26904}`.
+Returns a JSON stock quote. The first argument is a string representing a company's ticker symbol, and the second argument is the date you want to query. The following usage would return `{"date":"2018-01-19","uClose":54.06,"uOpen":53.7,"uHigh":54,"uLow":54.09,"uVolume":3605678,"close":27.07,"open":27.76,"high":27.11,"low":27.14,"volume":7067646,"change":0.2368,"changePercent":0.8807,"label":"Jan 19, 18","changeOverTime":0.26904}`.
 
 ``` excel
 =getStockQuote("FAST","1/19/2018")
@@ -111,3 +111,32 @@ This function uses [iexcloud's API](https://iexcloud.io/console/search) to pull 
 1. [TD Ameritrade](https://www.reddit.com/r/algotrading/comments/914q22/successful_access_to_td_ameritrade_api/)
 
 Be sure to review the [documentation](https://iexcloud.io/docs/api/#historical-prices) for iex cloud's historical prices api.
+
+<a name="getQuoteValue()"></a>
+## getQuoteValue(key, stock_quote)
+
+Returns the value associated with a key from a JSON. The first argument is a string representing the desired key, and the second argument is the stock quote JSON. The following usage would return `27.22`.
+
+``` excel
+=getQuoteValue("high","{"date":"2018-01-19","uClose":56.29,"uOpen":54.05,"uHigh":55,"uLow":54.57,"uVolume":3537791,"close":27.03,"open":27.16,"high":27.22,"low":26.98,"volume":7277005,"change":0.2314,"changePercent":0.8633,"label":"Jan 19, 18","changeOverTime":0.26099}")
+```
+
+Valid keys are:
+
+| Keys |
+|------|
+|date|
+|uClose|
+|uOpen|
+|uHigh|
+|uLow|
+|uVolume|
+|close|
+|open|
+|high|
+|low|
+|volume|
+|change|
+|changePercent|
+|label|
+|changeOverTime|
