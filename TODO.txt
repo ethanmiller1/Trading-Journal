@@ -1,6 +1,5 @@
 REMAINING TASKS:
 
-(A) 2019-06-19 Add a function that calculates the max profit of the trade.
 (A) 2019-06-19 Add a function that calculates the risk of the trade.
 (A) 2019-06-19 Add a function that calculates the return on risk ratio for the trade.
 (A) 2019-06-19 Add a function that calculates how many days until expiration an open trade has left.
@@ -8,7 +7,9 @@ REMAINING TASKS:
 (A) 2019-06-19 Add a function that calculates P/L %.
 (A) 2019-06-19 Add a function that calculates the commissions for a particular trade.
 (C) 2019-06-20 Change Exp cell format to all caps.
-(B) 2019-06-20 Add a function to get market posture (technical posture, trend)
+(B) 2019-06-20 Add a function to get market posture (technical posture, trend).
+(A) 2019-06-22 Add a function to calculate the Black-scholes formula.
+(B) 2019-06-22 Use an API to retrieve implied volatility.
 
 
 FINISHED TASKS (Ctrl+Shift+I for DateTime):
@@ -30,3 +31,4 @@ x 2019-06-21 15:10 Add a function that searches an API for the high and low data
 x 2019-06-21 15:37 Add a function to get the value of desired keys in a stock quote JSON.
 x 2019-06-21 16:47 Add a function that parses the quantity from the TOS data string.
 x 2019-06-21 16:48 Add a function that parses the premium from the TOS data string.
+x 2019-06-22 13:36 Add a function that calculates the max profit of the trade.

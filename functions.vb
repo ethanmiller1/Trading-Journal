@@ -276,3 +276,97 @@ Function getPrem(trade_order As String, option_type As String)
 ErrorHandl:
     getPrem = ""
 End Function
+
+Function getMaxProfit(trade_order As String, option_type As String, qty As Integer, prem As Currency, Optional comm As Currency=0.00, Optional risk As Currency=0.00)
+    ' If argument is null, return null.
+    If trade_order = "" Then GoTo ErrorHandl
+    
+    ' Get the nth word based on option type.
+    Select Case option_type
+    Case "Iron Condor"
+      maxProfit = prem
+    Case "Butterfly"
+      ' Get strikes.
+      strikes = Split(getNthWord(trade_order, 9), "/")
+      strike1 = strikes(0)
+      strike2 = strikes(1)
+      strike3 = strikes(2)
+
+      ' Get the distance between the short strike and long strike.
+      spread1 = Abs(strike1 - strike2)
+      spread2 = Abs(strike3 - strike2)
+
+      ' Whichever spread is smaller is the max profit.
+      If spread1 <= spread2 Then
+        maxProfit = spread1 - prem
+      Else
+        maxProfit = spread2 - prem
+      End If
+    Case "Calendar"
+      maxProfit = risk * 2
+      ' TODO: getMaxProfit = maxProfit, Exit Function
+    Case "Diagonal"
+      ' If debit paid was negitive (actually a credit).
+      If prem < 0 Then
+        maxProfit = Abs(prem)
+      Else
+        ' Get strikes.
+        strikes = Split(getNthWord(trade_order, 11), "/")
+        strike1 = strikes(0)
+        strike2 = strikes(1)
+
+        ' Spread Width - Premium + Extrinsic Value.
+        ' TODO: Use Black-scholes Model to calculate extrinsic value.
+        maxProfit = Abs(strike1 - strike2) - prem
+      End If
+    Case "Combo"
+        ' If long, stock has unlimited profit potential.
+        If InStr(trade_order,"BOT") Then
+          getMaxProfit = "Undefined"
+          Exit Function
+        ' If short, stock can only drop to 0 (finite profits).
+        Else
+          maxProfit = getNthWord(trade_order,9) + prem
+        End If
+    Case "Call"
+      ' If long, call has unlimited profit potential.
+        If InStr(trade_order,"BOT") Then
+          getMaxProfit = "Undefined"
+          Exit Function
+        ' If short, call can only expire worthless.
+        Else
+          maxProfit = prem
+        End If
+    Case "Put"
+      ' If long, put has unlimited profit potential.
+        If InStr(trade_order,"BOT") Then
+          maxProfit = getNthWord(trade_order, 8) - prem
+        ' If short, put can only expire worthless.
+        Else
+          maxProfit = prem
+        End If
+    ' Case "Vertical"
+    Case Else
+      ' If short, max profit is credit recieved.
+      If InStr(trade_order,"SOLD") Then
+        maxProfit = prem
+      ' If short, call can only expire worthless.
+      Else
+        ' Get strikes.
+        strikes = Split(getNthWord(trade_order, 9), "/")
+        strike1 = strikes(0)
+        strike2 = strikes(1)
+
+        maxProfit = Abs(strike1 - strike2) - prem
+      End If
+    End Select
+
+    ' Multiply by shares being controlled and subtract commissions.
+    maxProfit = maxProfit * Abs(qty) * 100 - comm
+
+    ' Return the option maxProfit.
+    getMaxProfit = maxProfit
+    Exit Function
+ErrorHandl:
+    getMaxProfit = ""
+End Function

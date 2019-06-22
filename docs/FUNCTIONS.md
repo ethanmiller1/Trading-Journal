@@ -6,7 +6,7 @@ The Trading Journal workbook has a number of functions built into it that are al
 | ------------------------------------|:-------------------| :-----| :-----| :-----|
 | [getOptionType()](#getOptionType()) | [getNthWord()](#getNthWord()) | [getExpiration()](#getExpiration()) | [getSymbol()](#getSymbol()) | [daysTillExp()](#daysTillExp()) |
 | [getStrategy()](#getStrategy())  | [getPosture()](#getPosture()) | [getStockQuote()](#getStockQuote()) | [getQuoteValue()](#getQuoteValue()) | [getPrem()](#getPrem()) |
-| [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
+| [getMaxProfit()](#getMaxProfit()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 
 <a name="getOptionType()"></a>
 ## getOptionType(text)
@@ -149,3 +149,33 @@ Returns a double representing the option premium of a TOS order. The first argum
 ``` excel
 =getPrem("BOT +1 FAST 100 16 FEB 18 55 CALL @1.75 LMT", "Call")
 ```
+
+<a name="getMaxProfit()"></a>
+## getMaxProfit(trade_order, option_type, qty, prem[, comm][,risk])
+
+Returns the max profit calculated from a TOS order. The first argument is a TOS order, the second argument is a string representing the option type of the TOS order, the third argument is the number of contracts, the fourth argument is the premium per share, the fifth argument is commissions paid to your broker, and is the sixth argument is the risk of the trade. The following usage would return `137`.
+
+``` excel
+=getMaxProfit("BOT +1 VERTICAL MRK 100 20 OCT 17 65/67.5 CALL @1.13
+","Vertical",1,1.13)
+```
+
+Note: Risk only needs to be included to estimate max profits for calendar spreads.
+
+The following is a list of formulas included in this function for calculating the max profit of currently supported strategies:
+
+| Strategy | Max Profit | Formula |
+|----------|------------|---------|
+|[Iron Condor](https://www.tastytrade.com/tt/learn/iron-condor)| net credit received | Premium |
+|[Butterfly Spread](https://www.tastytrade.com/tt/learn/butterfly-spread)| distance between the short strike and long strike, less the debit paid | \| Short Strike - Long Strike \| - Premium |
+| [Calendar Spread](https://www.tastytrade.com/tt/learn/calendar-spread) | incalculable: occurs if stock price = strike price at front-month expiration* | ~Short Call Credit - Net Loss on Long Call |
+| [Diagonal Spread](https://www.tastytrade.com/tt/learn/diagonal-spread) | incalculable due to the differing expiration cycles | ~Spread Width - Premium + Extrinsic Value | 
+| [Synthetics](https://www.tastytrade.com/tt/learn/synthetics) | undefined (unlimited) | Strike + Net Credit Received |
+| [Vertical Spread](https://www.tastytrade.com/tt/learn/vertical-spread) | distance between strikes less net debit paid OR credit received from opening trade | Spread Width - Premium OR Premium |
+| [Short Call/Put](https://www.tastytrade.com/tt/learn/naked-options) | credit received from opening trade | Premium |
+| [Long Call](#getMaxProfit) | undefined (unlimited) | ∞ |
+| [Long Put](#getMaxProfit) | strike price less debit paid from opening trade | Strike - Premium |
+
+Note: all euqations must be multiplied by the number of shares being controlled (# of contracts * 100) and subtract commissions.
+
+\*Formula must use the Black-Scholes model to calculate the theoretical value of the Long Call when the Short Call is worthless. You make money on the short call and lose money on the long call. The key to max profit is making as much money on the short call as you can, and losing as little money on the long call as you can.
