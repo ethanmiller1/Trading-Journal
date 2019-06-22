@@ -17,7 +17,7 @@ Use conditional formatting make the color of column A indicate its market postur
 `Right-click` > `Format Cells` > `Custom`, and then paste in:
 
 ``` excel
-[$-en-US] mmm;
+[$-en-US]mmm;
 ```
 
 ## Shade every other row
@@ -31,3 +31,9 @@ Create a new rule in conditional formatting, select `Use a formula to determine 
 ![](https://github.com/king-melchizedek/Trading-Journal/raw/master/images/colorShade.png)
 
 I use rgb(234, 238, 225) 
+
+## Add cell padding
+
+`Home` > `Alignment` > `Increase Indent`
+
+![](https://github.com/king-melchizedek/Trading-Journal/raw/master/images/cellPadding.png)
