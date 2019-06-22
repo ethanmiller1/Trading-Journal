@@ -277,14 +277,18 @@ ErrorHandl:
     getPrem = ""
 End Function
 
-Function getMaxProfit(trade_order As String, option_type As String, qty As Integer, prem As Currency, Optional comm As Currency=0.00, Optional risk As Currency=0.00)
+Function getMaxProfit(trade_order As String, option_type As String, qty As String, prem As String, Optional comm As Currency = 0#, Optional risk As Currency = 0#)
     ' If argument is null, return null.
     If trade_order = "" Then GoTo ErrorHandl
+    
+    ' Covert strings to numbers. (Currency and Integer won't accept "" as an argument, which results in a #VALUE error.)
+    Dim cPrem As Currency
+    cPrem = CCur(prem)
     
     ' Get the nth word based on option type.
     Select Case option_type
     Case "Iron Condor"
-      maxProfit = prem
+      maxProfit = cPrem
     Case "Butterfly"
       ' Get strikes.
       strikes = Split(getNthWord(trade_order, 9), "/")
@@ -298,17 +302,17 @@ Function getMaxProfit(trade_order As String, option_type As String, qty As Integ
 
       ' Whichever spread is smaller is the max profit.
       If spread1 <= spread2 Then
-        maxProfit = spread1 - prem
+        maxProfit = spread1 - cPrem
       Else
-        maxProfit = spread2 - prem
+        maxProfit = spread2 - cPrem
       End If
     Case "Calendar"
       maxProfit = risk * 2
       ' TODO: getMaxProfit = maxProfit, Exit Function
     Case "Diagonal"
       ' If debit paid was negitive (actually a credit).
-      If prem < 0 Then
-        maxProfit = Abs(prem)
+      If cPrem < 0 Then
+        maxProfit = Abs(cPrem)
       Else
         ' Get strikes.
         strikes = Split(getNthWord(trade_order, 11), "/")
@@ -317,39 +321,39 @@ Function getMaxProfit(trade_order As String, option_type As String, qty As Integ
 
         ' Spread Width - Premium + Extrinsic Value.
         ' TODO: Use Black-scholes Model to calculate extrinsic value.
-        maxProfit = Abs(strike1 - strike2) - prem
+        maxProfit = Abs(strike1 - strike2) - cPrem
       End If
     Case "Combo"
         ' If long, stock has unlimited profit potential.
-        If InStr(trade_order,"BOT") Then
+        If InStr(trade_order, "BOT") Then
           getMaxProfit = "Undefined"
           Exit Function
         ' If short, stock can only drop to 0 (finite profits).
         Else
-          maxProfit = getNthWord(trade_order,9) + prem
+          maxProfit = getNthWord(trade_order, 9) + cPrem
         End If
     Case "Call"
       ' If long, call has unlimited profit potential.
-        If InStr(trade_order,"BOT") Then
+        If InStr(trade_order, "BOT") Then
           getMaxProfit = "Undefined"
           Exit Function
         ' If short, call can only expire worthless.
         Else
-          maxProfit = prem
+          maxProfit = cPrem
         End If
     Case "Put"
       ' If long, put has unlimited profit potential.
-        If InStr(trade_order,"BOT") Then
-          maxProfit = getNthWord(trade_order, 8) - prem
+        If InStr(trade_order, "BOT") Then
+          maxProfit = getNthWord(trade_order, 8) - cPrem
         ' If short, put can only expire worthless.
         Else
-          maxProfit = prem
+          maxProfit = cPrem
         End If
     ' Case "Vertical"
     Case Else
       ' If short, max profit is credit recieved.
-      If InStr(trade_order,"SOLD") Then
-        maxProfit = prem
+      If InStr(trade_order, "SOLD") Then
+        maxProfit = cPrem
       ' If short, call can only expire worthless.
       Else
         ' Get strikes.
@@ -357,10 +361,10 @@ Function getMaxProfit(trade_order As String, option_type As String, qty As Integ
         strike1 = strikes(0)
         strike2 = strikes(1)
 
-        maxProfit = Abs(strike1 - strike2) - prem
+        maxProfit = Abs(strike1 - strike2) - cPrem
       End If
     End Select
-
+    
     ' Multiply by shares being controlled and subtract commissions.
     maxProfit = maxProfit * Abs(qty) * 100 - comm
 

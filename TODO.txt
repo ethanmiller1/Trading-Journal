@@ -32,3 +32,4 @@ x 2019-06-21 15:37 Add a function to get the value of desired keys in a stock qu
 x 2019-06-21 16:47 Add a function that parses the quantity from the TOS data string.
 x 2019-06-21 16:48 Add a function that parses the premium from the TOS data string.
 x 2019-06-22 13:36 Add a function that calculates the max profit of the trade.
+x 2019-06-22 14:27 Fix #VALUE error: "A value used in this formula is the wrong data type."
