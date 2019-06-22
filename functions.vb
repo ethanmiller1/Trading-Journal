@@ -374,3 +374,107 @@ Function getMaxProfit(trade_order As String, option_type As String, qty As Strin
 ErrorHandl:
     getMaxProfit = ""
 End Function
+
+Function getRisk(trade_order As String, option_type As String, qty As String, prem As String, max_profit As String, Optional comm As Currency = 0#)
+    ' If argument is null, return null.
+    If trade_order = "" Then GoTo ErrorHandl
+    
+    ' Covert strings to numbers. (Currency and Integer won't accept "" as an argument, which results in a #VALUE error.)
+    Dim premium As Currency
+    premium = CCur(prem)
+    Dim maxProfit As Currency
+    If IsNumeric(max_profit) Then maxProfit = CCur(max_profit)
+    
+    ' Get the nth word based on option type.
+    Select Case option_type
+    Case "Iron Condor"
+      strikes = Split(getNthWord(trade_order, 10), "/")
+      strike1 = strikes(0)
+      strike2 = strikes(1)
+      strike3 = strikes(2)
+      strike4 = strikes(3)
+
+      ' Get the distance between the short strike and long strike.
+      spread1 = Abs(strike2 - strike1)
+      spread2 = Abs(strike3 - strike4)
+
+      If spread1 > spread2 Then
+        risk = spread1
+        GoTo IronCondor
+      Else
+        risk = spread2
+        GoTo IronCondor
+      End If
+    Case "Vertical"
+      ' If short, risk is spread width less credit recieved.
+      If InStr(trade_order, "SOLD") Then
+        ' Get strikes.
+        strikes = Split(getNthWord(trade_order, 9), "/")
+        strike1 = strikes(0)
+        strike2 = strikes(1)
+
+        risk = Abs(strike1 - strike2) - premium
+      ' If long, risk is debit paid.
+      Else
+        risk = premium
+      End If
+    Case "Diagonal"
+      If premium < 0 Then
+        ' Get strikes.
+        strikes = Split(getNthWord(trade_order, 11), "/")
+        strike1 = strikes(0)
+        strike2 = strikes(1)
+        spread = Abs(strike1 - strike2)
+
+        risk = spread - Abs(premium)
+      Else
+        risk = premium
+      End If
+    Case "Combo"
+      ' If short, risk is unlimited.
+      If InStr(trade_order, "SOLD") Then
+        getRisk = "Undefined"
+        Exit Function
+      ' If long, risk is capped by the floor.
+      Else
+        strike1 = getNthWord(trade_order, 9)
+        risk = strike1 - premium
+      End If
+    Case "Call"
+      ' If short, risk is unlimited.
+      If InStr(trade_order, "SOLD") Then
+        getRisk = "Undefined"
+        Exit Function
+      ' If long, risk is debit paid.
+      Else
+        risk = premium
+      End If
+    Case "Put"
+      ' If short, risk is capped by the floor.
+      If InStr(trade_order, "SOLD") Then
+        strike1 = getNthWord(trade_order, 9)
+        risk = strike1 - premium
+      ' If long, risk is debit paid.
+      Else
+        risk = premium
+      End If
+    Case Else
+      risk = premium
+    End Select
+    
+    ' Multiply by shares being controlled and add commissions.
+    risk = risk * Abs(qty) * 100 + comm
+
+    ' Return the option risk.
+    getRisk = risk
+    Exit Function
+IronCondor:
+    risk = risk * Abs(qty) * 100 + comm
+    getRisk = risk - maxProfit
+Standard:
+    risk = premium
+    risk = risk * Abs(qty) * 100 + comm
+    getRisk = risk
+ErrorHandl:
+    getRisk = ""
+End Function

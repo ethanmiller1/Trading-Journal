@@ -36,4 +36,4 @@ I use rgb(234, 238, 225)
 
 `Home` > `Alignment` > `Increase Indent`
 
-![](https://github.com/king-melchizedek/Trading-Journal/raw/master/images/cellPadding.png)
+![](https://github.com/king-melchizedek/Trading-Journal/raw/master/images/cellPadding.gif)

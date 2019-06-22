@@ -6,7 +6,7 @@ The Trading Journal workbook has a number of functions built into it that are al
 | ------------------------------------|:-------------------| :-----| :-----| :-----|
 | [getOptionType()](#getOptionType()) | [getNthWord()](#getNthWord()) | [getExpiration()](#getExpiration()) | [getSymbol()](#getSymbol()) | [daysTillExp()](#daysTillExp()) |
 | [getStrategy()](#getStrategy())  | [getPosture()](#getPosture()) | [getStockQuote()](#getStockQuote()) | [getQuoteValue()](#getQuoteValue()) | [getPrem()](#getPrem()) |
-| [getMaxProfit()](#getMaxProfit()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
+| [getMaxProfit()](#getMaxProfit()) | [getRisk()](#getRisk()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) | [exampleFunction()](#exampleFunction()) |
 
 <a name="getOptionType()"></a>
 ## getOptionType(text)
@@ -157,7 +157,7 @@ Returns the max profit calculated from a TOS order. The first argument is a TOS 
 
 ``` excel
 =getMaxProfit("BOT +1 VERTICAL MRK 100 20 OCT 17 65/67.5 CALL @1.13
-","Vertical",1,1.13)
+","Vertical", 1, 1.13)
 ```
 
 Note: Risk only needs to be included to estimate max profits for calendar spreads.
@@ -179,3 +179,27 @@ The following is a list of formulas included in this function for calculating th
 Note: all euqations must be multiplied by the number of shares being controlled (# of contracts * 100) and subtract commissions.
 
 \*Formula must use the Black-Scholes model to calculate the theoretical value of the Long Call when the Short Call is worthless. You make money on the short call and lose money on the long call. The key to max profit is making as much money on the short call as you can, and losing as little money on the long call as you can.
+
+<a name="getRisk()"></a>
+## getRisk(trade_order, option_type, qty, prem, max_profit[, comm])
+
+Returns the risk calculated from a TOS order. The first argument is a TOS order, the second argument is a string representing the option type of the TOS order, the third argument is the number of contracts, the fourth argument is the premium per share, the fifth argument is the max profit calculated from a TOS order, and the sixth argument is commissions paid to your broker. The following usage would return `113`.
+
+``` excel
+=getRisk("BOT +1 VERTICAL MRK 100 20 OCT 17 65/67.5 CALL @1.13
+","Vertical", 1, 1.13, 137)
+```
+
+The following is a list of formulas included in this function for calculating the risk of currently supported strategies:
+
+| Strategy | Max Profit | Formula |
+|----------|------------|---------|
+|[Iron Condor](https://www.tastytrade.com/tt/learn/iron-condor)| the greater of the two vertical spreads | Spread Width |
+| [Vertical Spread](https://www.tastytrade.com/tt/learn/vertical-spread) | distance between strikes less net credit received OR debit paid for opening trade | Spread Width - Premium OR Premium |
+| [Diagonal Spread](https://www.tastytrade.com/tt/learn/diagonal-spread) | distance between strikes less net credit received OR debit paid for opening trade | Spread Width - Premium OR Premium | 
+| [Synthetics](https://www.tastytrade.com/tt/learn/synthetics) | undefined (unlimited) | ∞ OR Strike - Premium |
+| [Short Call](https://www.tastytrade.com/tt/learn/naked-options) | undefined (unlimited) | ∞ |
+| [Short Put](https://www.tastytrade.com/tt/learn/naked-options) | strike price less credit received from opening trade | Strike - Premium |
+| [Standard](#getRisk()) | debit paid for opening trade | Premium |
+
+Note: all euqations must be multiplied by the number of shares being controlled (# of contracts * 100) and add commissions.
