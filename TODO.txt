@@ -1,14 +1,12 @@
 REMAINING TASKS:
 
-(A) 2019-06-19 Add a function that calculates the return on risk ratio for the trade.
-(A) 2019-06-19 Add a function that calculates how many days until expiration an open trade has left.
-(A) 2019-06-19 Add a function that calculates P/L Closed.
 (A) 2019-06-19 Add a function that calculates P/L %.
 (A) 2019-06-19 Add a function that calculates the commissions for a particular trade.
 (C) 2019-06-20 Change Exp cell format to all caps.
 (B) 2019-06-20 Add a function to get market posture (technical posture, trend).
 (A) 2019-06-22 Add a function to calculate the Black-scholes formula.
 (B) 2019-06-22 Use an API to retrieve implied volatility.
+(B) 2019-06-22 Fix null iron condor return for getRisk().
 
 
 FINISHED TASKS (Ctrl+Shift+I for DateTime):
@@ -33,3 +31,6 @@ x 2019-06-21 16:48 Add a function that parses the premium from the TOS data stri
 x 2019-06-22 13:36 Add a function that calculates the max profit of the trade.
 x 2019-06-22 14:27 Fix #VALUE error: "A value used in this formula is the wrong data type."
 x 2019-06-22 17:14 Add a function that calculates the risk of the trade.
+x 2019-06-22 19:24 Add a function that calculates the return on risk ratio for the trade.
+x 2019-06-22 19:24 Add a function that calculates how many days until expiration an open trade has left.
+x 2019-06-22 19:24 Add a function that calculates P/L Closed.

@@ -375,10 +375,14 @@ ErrorHandl:
     getMaxProfit = ""
 End Function
 
-Function getRisk(trade_order As String, option_type As String, qty As String, prem As String, max_profit As String, Optional comm As Currency = 0#)
+Function getRisk(trade_order As String, option_type As String, qty As String prem As String, max_profit As String, Optional comm As Currency = 0#)
     ' If argument is null, return null.
     If trade_order = "" Then GoTo ErrorHandl
     
+    ' TODO: Replace arguments with functions.
+    ' qty = getNthWord(trade_order,2)
+    ' prem = getPrem(trade_order, option_type)
+
     ' Covert strings to numbers. (Currency and Integer won't accept "" as an argument, which results in a #VALUE error.)
     Dim premium As Currency
     premium = CCur(prem)
@@ -477,4 +481,56 @@ Standard:
     getRisk = risk
 ErrorHandl:
     getRisk = ""
+End Function
+
+Function GetPlCLose(trade_order As String, option_type As String, prem As String, max_profit As String, Optional comm As Currency = 0#)
+    ' If argument is null, return null.
+    If trade_order = "" Or prem = "" Then GoTo ErrorHandl
+    
+    ' Covert strings to numbers.
+    Dim premium As Currency
+    premium = CCur(prem)
+    Dim maxProfit As Currency
+    If IsNumeric(max_profit) Then maxProfit = CCur(max_profit)
+
+    ' How many shares being controlled?
+    contracts = Abs(getNthWord(trade_order,2))
+    shares = contracts * 100
+    debit = premium * shares
+
+    ' Get the nth word based on option type.
+    Select Case option_type
+    Case "Iron Condor"
+      ' Opening Credit - Closing Debit
+      plClose = maxProfit - debit
+      ' Skip comissions -- Max profits accounts for it.
+    Case "Combo"
+      credit = Replace(getNthWord(trade_order, 11),"@","") + 0
+      plClose = debit + (credit*shares) - comm
+    Case "Vertical"
+      If InStr(trade_order, "SOLD") Then
+        plClose = maxProfit - debit
+      Else
+        entryDebit = getPrem(trade_order, option_type)
+        risk = getRisk(trade_order, option_type, CStr(contracts), CStr(entryDebit), max_profit, comm)
+        credit = debit
+        plClose = credit - risk
+      End If
+    Case Else
+      credit = getPrem(trade_order, option_type)
+      ' If credit was recieved...
+      If (InStr(trade_order, "BOT") And credit < 0) Or InStr(trade_order, "SOLD") Then
+        plClose = maxProfit - debit
+      Else
+        risk = getRisk(trade_order, option_type, CStr(contracts), CStr(credit), max_profit, comm)
+        credit = debit
+        plClose = credit - risk
+      End If
+    End Select
+
+    ' Return the option plClose.
+    GetPlCLose = plClose
+    Exit Function
+ErrorHandl:
+    GetPlCLose = ""
 End Function

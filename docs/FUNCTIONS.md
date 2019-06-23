@@ -203,3 +203,16 @@ The following is a list of formulas included in this function for calculating th
 | [Standard](#getRisk()) | debit paid for opening trade | Premium |
 
 Note: all euqations must be multiplied by the number of shares being controlled (# of contracts * 100) and add commissions.
+
+<a name="GetPlCLose()"></a>
+## GetPlCLose(trade_order, option_type, prem, max_profit[, comm])
+
+Returns the profit (or loss) or a closed TOS order. The first argument is a TOS order, the second arguments is a string representing the type of option being evaluated, the third argument is a string representation of the closing option premium, and the fourth argument is the max profit of a TOS order. The following usage would return `25`.
+
+``` excel
+=GetPlCLose("BOT +1 FAST 100 16 FEB 18 55 PUT @1.75 LMT","Put","2.00","5,325")
+```
+
+Numeric values are passed in as strings to avoid datatype errors when cells contain null values. They are converted to the appropirate datatypes _inside_ the function.
+
+Many of the strategies in this function use max profit to calculate P/L Closed. As a consquence, commissions are accounted for. It only needs to be passed in for synthetics.
