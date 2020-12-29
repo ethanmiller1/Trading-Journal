@@ -281,7 +281,7 @@ Function getMaxProfit(trade_order As String, option_type As String, qty As Strin
     ' If argument is null, return null.
     If trade_order = "" Then GoTo ErrorHandl
     
-    ' Covert strings to numbers. (Currency and Integer won't accept "" as an argument, which results in a #VALUE error.)
+    ' Convert strings to numbers. (Currency and Integer won't accept "" as an argument, which results in a #VALUE error.)
     Dim cPrem As Currency
     cPrem = CCur(prem)
     
@@ -333,7 +333,7 @@ Function getMaxProfit(trade_order As String, option_type As String, qty As Strin
           maxProfit = getNthWord(trade_order, 9) + cPrem
         End If
     Case "Call"
-      ' If long, call has unlimited profit potential.
+        ' If long, call has unlimited profit potential.
         If InStr(trade_order, "BOT") Then
           getMaxProfit = "Undefined"
           Exit Function
@@ -375,7 +375,7 @@ ErrorHandl:
     getMaxProfit = ""
 End Function
 
-Function getRisk(trade_order As String, option_type As String, qty As String prem As String, max_profit As String, Optional comm As Currency = 0#)
+Function getRisk(trade_order As String, option_type As String, qty As String, prem As String, max_profit As String, Optional comm As Currency = 0)
     ' If argument is null, return null.
     If trade_order = "" Then GoTo ErrorHandl
     
@@ -475,6 +475,7 @@ Function getRisk(trade_order As String, option_type As String, qty As String pre
 IronCondor:
     risk = risk * Abs(qty) * 100 + comm
     getRisk = risk - maxProfit
+    Exit Function
 Standard:
     risk = premium
     risk = risk * Abs(qty) * 100 + comm
@@ -533,4 +534,35 @@ Function GetPlCLose(trade_order As String, option_type As String, prem As String
     Exit Function
 ErrorHandl:
     GetPlCLose = ""
+End Function
+
+Function GetPlPercent(pl_closed As String, max_profit As String, max_risk As String)
+ 
+    ' If argument is null, return null.
+    If pl_closed = "" Then GoTo ErrorHandl
+
+    ' Covert strings to numbers.
+    Dim plClose As Currency
+    plClose = CCur(pl_closed)
+    Dim maxProfit As Currency
+    If IsNumeric(max_profit) Then maxProfit = CCur(max_profit) Else GoTo Undefined
+    Dim risk As Currency
+    If IsNumeric(max_risk) Then risk = CCur(max_risk) Else GoTo Undefined
+
+    ' If trade was profitable, show percent of max profit
+    If plClose > 0 Then
+      plPercent = plClose / maxProfit
+    ' If trade lost money, show percent of max loss
+    Else
+      plPercent = plClose / risk
+    End If
+
+    ' Return the option plPercent.
+    GetPlPercent = plPercent
+    Exit Function
+Undefined:
+    GetPlPercent = 0
+    Exit Function
+ErrorHandl:
+    GetPlPercent = ""
 End Function
