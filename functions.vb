@@ -566,3 +566,74 @@ Undefined:
 ErrorHandl:
     GetPlPercent = ""
 End Function
+
+Function GetMonth(mon_abr As String)
+  monthNumber = Application.Match(mon_abr, Array("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"), 0)
+  getMonth = Evaluate(TEXT(monthNumber, "00"))
+End Function
+
+Function GetOptionSignature(trade_order As String)
+    If trade_order = "" Then GoTo ErrorHandl
+
+    option_type = getOptionType(trade_order)
+
+    Select Case option_type
+    ' Single Leg Options (AND P/L%)
+    Case "Call", "Put"
+      optionSignature = "." & getNthWord(trade_order, 3) & getNthWord(trade_order, 7) & GetMonth(getNthWord(trade_order, 6)) & getNthWord(trade_order, 5) & Left(getNthWord(trade_order, 9), 1) & getNthWord(trade_order, 8)
+    Case "Iron Condor"
+      signatureBase = getNthWord(trade_order, 5) & getNthWord(trade_order, 9) & GetMonth(getNthWord(trade_order, 8)) & getNthWord(trade_order, 7)
+      types = Split(getNthWord(trade_order, 11), "/")
+      type1 = Left(types(0), 1)
+      type2 = Left(types(1), 1)
+      strikes = Split(getNthWord(trade_order, 10), "/")
+      strike1 = strikes(0)
+      strike2 = strikes(1)
+      strike3 = strikes(2)
+      strike4 = strikes(3)
+      optionSignature = "." & signatureBase & type1 & strike1 & "-." & signatureBase & type1 & strike2 & "+." & signatureBase & type2 & strike3 & "-." & signatureBase & type2 & strike4
+    Case "Vertical"
+      signatureBase = getNthWord(trade_order, 4) & getNthWord(trade_order, 8) & GetMonth(getNthWord(trade_order, 7)) & getNthWord(trade_order, 6) & Left(getNthWord(trade_order, 10), 1)
+      strikes = Split(getNthWord(trade_order, 9), "/")
+      strike1 = strikes(0)
+      strike2 = strikes(1)
+      optionSignature = "." & signatureBase & strike1 & "-." & signatureBase & strike2
+    Case "Diagonal"
+      dates = Split(getNthWord(trade_order, 8), "/")
+      date1 = dates(0) & GetMonth(getNthWord(trade_order, 7)) & getNthWord(trade_order, 6)
+      date2 = getNthWord(trade_order, 10) & GetMonth(getNthWord(trade_order, 9)) & dates(1)
+      tickerSymbol = getNthWord(trade_order, 4)
+      optionType = Left(getNthWord(trade_order, 12), 1)
+      strikes = Split(getNthWord(trade_order, 11), "/")
+      strike1 = strikes(0)
+      strike2 = strikes(1)
+      optionSignature = "." & tickerSymbol & date1 & optionType & strike1 & "-." & tickerSymbol & date2 & optionType & strike2
+    Case "Calendar"
+      dates = Split(getNthWord(trade_order, 8), "/")
+      date1 = dates(0) & GetMonth(getNthWord(trade_order, 7)) & getNthWord(trade_order, 6)
+      date2 = getNthWord(trade_order, 10) & GetMonth(getNthWord(trade_order, 9)) & dates(1)
+      tickerSymbol = getNthWord(trade_order, 4)
+      signaturePostfix = Left(getNthWord(trade_order, 12), 1) & getNthWord(trade_order, 11)
+      optionSignature = "." & tickerSymbol & date1 & signaturePostfix & "-." & tickerSymbol & date2 & signaturePostfix
+    Case "Butterfly"
+      signatureBase = getNthWord(trade_order, 4) & getNthWord(trade_order, 8) & GetMonth(getNthWord(trade_order, 7)) & getNthWord(trade_order, 6) & Left(getNthWord(trade_order, 10), 1)
+      strikes = Split(getNthWord(trade_order, 9), "/")
+      strike1 = strikes(0)
+      strike2 = strikes(1)
+      strike3 = strikes(2)
+      optionSignature = "." & signatureBase & strike1 & "-." & signatureBase & strike2 & "-." & signatureBase & strike2 & "+." & signatureBase & strike3
+    Case "Combo"
+      signatureBase = getNthWord(trade_order, 4) & getNthWord(trade_order, 8) & GetMonth(getNthWord(trade_order, 7)) & getNthWord(trade_order, 6)
+      types = Split(getNthWord(trade_order, 10), "/")
+      type1 = Left(types(0), 1)
+      type2 = Left(types(1), 1)
+      strike = getNthWord(trade_order, 9)
+      optionSignature = "." & signatureBase & type1 & strike & "-." & signatureBase & type2 & strike
+    Case Else
+    End Select
+
+    getOptionSignature = optionSignature
+    Exit Function
+ErrorHandl:
+    getOptionSignature = ""
+End Function

@@ -218,7 +218,7 @@ Numeric values are passed in as strings to avoid datatype errors when cells cont
 Many of the strategies in this function use max profit to calculate P/L Closed. As a consequence, commissions are accounted for. It only needs to be passed in for synthetics.
 
 
-<a name="GetPlPercent()"></a> pl_closed As String, max_profit As String, max_risk As String
+<a name="GetPlPercent()"></a>
 ## GetPlPercent(pl_closed, max_profit, max_risk)
 
 Returns the profit (or loss) of a closed TOS order. The first argument is the Profit/Loss dollar amount, the second arguments is the max profit, the third argument is the total risk. The following usage would return `18%`.
@@ -228,3 +228,24 @@ Returns the profit (or loss) of a closed TOS order. The first argument is the Pr
 ```
 
 Numeric values are passed in as strings to avoid datatype errors when cells contain null values. They are converted to the appropriate datatypes _inside_ the function.
+
+<a name="GetOptionSignature()"></a>
+## GetOptionSignature(trade_order)
+
+Returns the option signature of a TOS order. It can be used to chart the price of an option over time.
+
+``` excel
+=GetOptionSignature("BOT +1 VERTICAL MRK 100 20 OCT 17 65/67.5 CALL @1.13")
+```
+
+### Test Table:
+
+| TOS Order         | Option Signature |
+|-------------------|:--------------|
+|SOLD -1 IRON CONDOR MMM 100 20 OCT 17 200/220/195/190 CALL/PUT @8.53 |.MMM171020C200-.MMM171020C220+.MMM171020P195-.MMM171020P190|
+|BOT +1 VERTICAL MRK 100 20 OCT 17 65/67.5 CALL @1.13                 |.MRK171020C65-.MRK171020C67.5'|
+|BOT +1 DIAGONAL CRM 100 18 AUG 17/21 JUL 17 87/82.5 PUT @2.57        |.CRM170818P87-.CRM170721P.5|
+|BOT +1 FAST 100 16 FEB 18 55 CALL @1.75 LMT                          |.FAST180216C55|
+|BOT +1 BUTTERFLY SINA 100 19 MAY 17 65/70/75 CALL @.80               |.SINA170519C65-.SINA170519C70-.SINA170519C70+.SINA170519C75|
+|SOLD -2 COMBO HPQ 100 20 OCT 17 19 CALL/PUT @.13                     |.HPQ171020C19-.HPQ171020P19|
+|BOT +5 CALENDAR FSLR 100 16 JUN 17/19 MAY 17 25 CALL @.31            |.FSLR170616C25-.FSLR170519C25|
