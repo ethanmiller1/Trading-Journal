@@ -631,9 +631,39 @@ Function GetOptionSignature(trade_order As String)
       optionSignature = "." & signatureBase & type1 & strike & "-." & signatureBase & type2 & strike
     Case Else
     End Select
-
-    getOptionSignature = optionSignature
+    GetOptionSignature = optionSignature
     Exit Function
 ErrorHandl:
-    getOptionSignature = ""
+    GetOptionSignature = ""
+End Function
+
+Function GetCommission(trade_order As String)
+    If trade_order = "" Then GoTo ErrorHandl
+
+    option_strategy = getOptionType(trade_order)
+    Dim qty As Integer
+    Dim noOfContracts As Integer
+    Dim closedQty As Integer
+    Dim BASE_FEE As Currency
+    Dim FEE_PER_CONTRACT As Currency
+
+    qty = getNthWord(trade_order, 2)
+    closedQty = 2
+    BASE_FEE = 1.25
+    FEE_PER_CONTRACT = 0.75
+
+    Select Case option_strategy
+    Case "Call", "Put"
+      noOfContracts = 1
+    Case "Vertical", "Diagonal", "Calendar", "Combo"
+      noOfContracts = 2
+    Case "Iron Condor", "Butterfly"
+      noOfContracts = 4
+    Case Else
+    End Select
+
+    GetCommission = ( BASE_FEE + (Abs(qty) * FEE_PER_CONTRACT * noOfContracts ) ) * closedQty
+    Exit Function
+ErrorHandl:
+    GetCommission = ""
 End Function

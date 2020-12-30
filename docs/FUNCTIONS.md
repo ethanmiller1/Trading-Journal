@@ -6,7 +6,8 @@ The Trading Journal workbook has a number of functions built into it that are al
 | ------------------------------------|:-------------------| :-----| :-----| :-----|
 | [getOptionType()](#getOptionType()) | [getNthWord()](#getNthWord()) | [getExpiration()](#getExpiration()) | [getSymbol()](#getSymbol()) | [daysTillExp()](#daysTillExp()) |
 | [getStrategy()](#getStrategy())  | [getPosture()](#getPosture()) | [getStockQuote()](#getStockQuote()) | [getQuoteValue()](#getQuoteValue()) | [getPrem()](#getPrem()) |
-| [getMaxProfit()](#getMaxProfit()) | [getRisk()](#getRisk()) | [GetPlCLose()](#GetPlCLose()) | [GetPlPercent()](#GetPlPercent()) | [exampleFunction()](#exampleFunction()) |
+| [getMaxProfit()](#getMaxProfit()) | [getRisk()](#getRisk()) | [GetPlCLose()](#GetPlCLose()) | [GetPlPercent()](#GetPlPercent()) | [GetOptionSignature()](#GetOptionSignature()) |
+| [GetCommission()](#GetCommission()) | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction()) |
 
 <a name="getOptionType()"></a>
 ## getOptionType(text)
@@ -249,3 +250,18 @@ Returns the option signature of a TOS order. It can be used to chart the price o
 |BOT +1 BUTTERFLY SINA 100 19 MAY 17 65/70/75 CALL @.80               |.SINA170519C65-.SINA170519C70-.SINA170519C70+.SINA170519C75|
 |SOLD -2 COMBO HPQ 100 20 OCT 17 19 CALL/PUT @.13                     |.HPQ171020C19-.HPQ171020P19|
 |BOT +5 CALENDAR FSLR 100 16 JUN 17/19 MAY 17 25 CALL @.31            |.FSLR170616C25-.FSLR170519C25|
+
+<a name="GetCommission()"></a>
+## GetCommission(trade_order)
+
+Returns the commission paid to thinkorswim for a fulfilled order. It takes a thinkorswim order to determine how many contracts are being evaluated. The following usage would return `$8.50`.
+
+``` excel
+=GetCommission("SOLD -1 IRON CONDOR QCOM 100 16 FEB 18 65/67.5/60/57.5 CALL/PUT @1.44")
+```
+
+The formula is as follows:
+
+```msgraph-interactive
+4 contracts * $0.75 fee per contract = $3 + $1.25 base fee = $4.25 * 2 for opening and closing = $8.50
+```
