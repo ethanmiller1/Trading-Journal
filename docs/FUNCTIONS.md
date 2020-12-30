@@ -7,7 +7,7 @@ The Trading Journal workbook has a number of functions built into it that are al
 | [GetOptionType()](#GetOptionType()) | [GetNthWord()](#GetNthWord())           | [GetExpiration()](#GetExpiration())     | [GetSymbol()](#GetSymbol())             | [DaysTillExp()](#DaysTillExp())               |
 | [GetStrategy()](#GetStrategy())     | [GetPosture()](#GetPosture())           | [GetStockQuote()](#GetStockQuote())     | [GetQuoteValue()](#GetQuoteValue())     | [GetPrem()](#GetPrem())                       |
 | [GetMaxProfit()](#GetMaxProfit())   | [GetRisk()](#GetRisk())                 | [GetPLClose()](#GetPLClose())           | [GetPLPercent()](#GetPLPercent())       | [GetOptionSignature()](#GetOptionSignature()) |
-| [GetCommission()](#GetCommission()) | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction())       |
+| [GetCommission()](#GetCommission()) | [GetOptimalDTE()](#GetOptimalDTE())     | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction())       |
 
 
 
@@ -281,4 +281,14 @@ The formula is as follows:
 
 ```msgraph-interactive
 4 contracts * $0.75 fee per contract = $3 + $1.25 base fee = $4.25 * 2 for opening and closing = $8.50
+```
+
+
+
+## GetOptimalDTE(trade_date, expiration_date)
+
+Returns an integer representing the number of days the order expiration was removed from the date where option premium was optimal for maximum profit. The first argument is a TOS order, the second argument is a date. The following usage would return `48`.
+
+```excel
+=GetOptimalDTE("BOT +1 FAST 100 16 FEB 18 55 PUT @1.75 LMT", "12/30/2017")
 ```

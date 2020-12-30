@@ -23,6 +23,8 @@ The easiest way to access this Trading Journal is simply to download the `Tradin
 
 Access the Scrum project management on [Azure Boards](https://dev.azure.com/ethanromans58/Trading%20Journal/_boards/board/t/Trading%20Journal%20Team/Stories)
 
+Trading rules and formulas can be found in this [Quizlet collection](https://quizlet.com/kingmelchizedek/folders/investing/sets).
+
 ## Enable function intellisense
 
 Take the following steps to get function tooltips to top up as you're writing them.

@@ -1,6 +1,5 @@
 REMAINING TASKS:
 
-(C) 2019-06-20 Change Exp cell format to all caps.
 (B) 2019-06-20 Add a function to get market posture (technical posture, trend).
 (A) 2019-06-22 Add a function to calculate the Black-scholes formula.
 (B) 2019-06-22 Use an API to retrieve implied volatility.
@@ -41,3 +40,4 @@ x 2020-12-29 22:45 Add a function that calculates the commissions for a particul
 x 2020-12-30 08:33 Change all function cases to Pascal Case
 x 2020-12-30 09:42 Incorporate commissions into existing formulas
 x 2020-12-30 11:01 Copy option signature to clipboard when cell is selected
+x 2020-12-30 11:04 Change Exp cell format to all caps.

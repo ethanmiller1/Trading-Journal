@@ -63,7 +63,8 @@ GetNthWord = Trim(GetNthWord)
  
 End Function
 
-Function GetExpiration(trade_order As String, option_type As String)
+Function GetExpiration(trade_order As String, Optional option_type As String = "false")
+    If option_type = "false" Then option_type = GetOptionType(trade_order)
     Select Case option_type
     ' If option type matches case strings, return the 6th-8th word.
     Case "Combo", "Vertical", "Butterfly"
@@ -693,4 +694,14 @@ Function Clipboard(Optional StoreText As String) As String
       End Select
     End With
   End With
+End Function
+
+Function GetOptimalDTE(trade_order As String, optimal_exit_date As Date)
+    If trade_order = "" Or optimal_exit_date = 0 Then GoTo ErrorHandl
+    Dim expiration As Date
+    expiration = DateValue(GetExpiration(trade_order))
+    GetOptimalDTE = expiration - optimal_exit_date
+    Exit Function
+ErrorHandl:
+    GetOptimalDTE = ""
 End Function
