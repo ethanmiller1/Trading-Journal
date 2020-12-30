@@ -252,9 +252,10 @@ ErrorHandl:
     GetQuoteValue = ""
 End Function
 
-Function GetPrem(trade_order As String, option_type As String)
+Function GetPrem(trade_order As String, Optional option_type As String = "false")
     ' If argument is null, return null.
     If trade_order = "" Then GoTo ErrorHandl
+    If option_type = "false" Then option_type = GetOptionType(trade_order)
     
     ' Get the nth word based on option type.
     Select Case option_type
@@ -704,4 +705,63 @@ Function GetOptimalDTE(trade_order As String, optimal_exit_date As Date)
     Exit Function
 ErrorHandl:
     GetOptimalDTE = ""
+End Function
+
+Function GetActualMaxProfit(trade_order As String, optimal_prem As String)
+    If trade_order = "" Or optimal_prem = "" Then GoTo ErrorHandl
+
+    Dim option_strategy As String
+    Dim qty As String
+    Dim prem As String
+    Dim max_profit As String
+    Dim optimal_cPrem As Currency
+
+    optimal_cPrem = CCur(optimal_prem)
+    option_strategy = GetOptionType(trade_order)
+    qty = Abs(GetNthWord(trade_order, 2))
+    prem = GetPrem(trade_order)
+    max_profit = GetMaxProfit(trade_order, option_strategy, qty, prem)
+    isShort = GetNthWord(trade_order, 1) = "SOLD"
+
+    Select Case option_strategy
+    Case "Iron Condor"
+      maxProfit = max_profit - (optimal_cPrem * qty * 100)
+    Case "Combo"
+      maxProfit = (optimal_cPrem * 100 * qty) + (prem * 100 * qty) - GetCommission(trade_order)
+    Case "Vertical"
+      If isShort Then
+        maxProfit = max_profit - (optimal_cPrem * 100 * qty)
+      Else
+        risk = GetRisk(trade_order, option_strategy, qty, prem, max_profit)
+        maxProfit = optimal_cPrem * 100 * qty - risk
+      End If
+    Case Else
+      If (Not isShort And prem < 0) Or isShort Then
+        maxProfit = max_profit - optimal_cPrem * 100 * qty
+      Else
+        risk = GetRisk(trade_order, option_strategy, qty, prem, max_profit)
+        maxProfit = optimal_cPrem * 100 * qty - risk
+      End If
+    End Select
+
+    GetActualMaxProfit = maxProfit
+    Exit Function
+ErrorHandl:
+    GetActualMaxProfit = ""
+End Function
+
+Function GetPercentOfMaxProfit(max_profit As String, risk As String, actual_max_profit As String)
+    If max_profit = "" Or actual_max_profit = "" Then GoTo ErrorHandl
+    If max_profit = "Undefined" Or Risk = "Undefined" Then GoTo Undefined
+
+    precentOfMaxProfit = actual_max_profit / IIf(actual_max_profit > 0, max_profit, risk)
+
+    GetPercentOfMaxProfit = precentOfMaxProfit
+    Exit Function
+Undefined:
+    precentOfMaxProfit = 0
+    GetPercentOfMaxProfit = precentOfMaxProfit
+    Exit Function   
+ErrorHandl:
+    GetPercentOfMaxProfit = ""
 End Function

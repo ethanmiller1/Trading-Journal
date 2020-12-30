@@ -2,18 +2,19 @@
 
 The Trading Journal workbook has a number of functions built into it that are always available. They are listed here in alphabetical order.
 
-| Built-in Functions                  |                                         |                                         |                                         |                                               |
-| ----------------------------------- | :-------------------------------------- | :-------------------------------------- | :-------------------------------------- | :-------------------------------------------- |
-| [GetOptionType()](#GetOptionType()) | [GetNthWord()](#GetNthWord())           | [GetExpiration()](#GetExpiration())     | [GetSymbol()](#GetSymbol())             | [DaysTillExp()](#DaysTillExp())               |
-| [GetStrategy()](#GetStrategy())     | [GetPosture()](#GetPosture())           | [GetStockQuote()](#GetStockQuote())     | [GetQuoteValue()](#GetQuoteValue())     | [GetPrem()](#GetPrem())                       |
-| [GetMaxProfit()](#GetMaxProfit())   | [GetRisk()](#GetRisk())                 | [GetPLClose()](#GetPLClose())           | [GetPLPercent()](#GetPLPercent())       | [GetOptionSignature()](#GetOptionSignature()) |
-| [GetCommission()](#GetCommission()) | [GetOptimalDTE()](#GetOptimalDTE())     | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction())       |
+| Built-in Functions                      |                                         |                                               |                                         |                                               |
+| --------------------------------------- | :-------------------------------------- | :-------------------------------------------- | :-------------------------------------- | :-------------------------------------------- |
+| [GetOptionType()](#GetOptionType())     | [GetNthWord()](#GetNthWord())           | [GetExpiration()](#GetExpiration())           | [GetSymbol()](#GetSymbol())             | [DaysTillExp()](#DaysTillExp())               |
+| [GetStrategy()](#GetStrategy())         | [GetPosture()](#GetPosture())           | [GetStockQuote()](#GetStockQuote())           | [GetQuoteValue()](#GetQuoteValue())     | [GetPrem()](#GetPrem())                       |
+| [GetMaxProfit()](#GetMaxProfit())       | [GetRisk()](#GetRisk())                 | [GetPLClose()](#GetPLClose())                 | [GetPLPercent()](#GetPLPercent())       | [GetOptionSignature()](#GetOptionSignature()) |
+| [GetCommission()](#GetCommission())     | [GetOptimalDTE()](#GetOptimalDTE())     | [GetActualMaxProfit()](#GetActualMaxProfit()) | [GetPercentOfMaxProfit()](#GetPercentOfMaxProfit()) | [ExampleFunction()](#ExampleFunction())       |
+| [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction())       | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction())       |
 
 
 
 ## GetOptionType(text)
 
-Returns a string representing the type of option contract input by the user. Arguments may be a string copied from the thinkorswim platform.
+Returns a s representing the type of option contract input by the user. Arguments may be a s copied from the thinkorswim platform.
 
 ```excel
 =GetOptionType("SOLD -3 IRON CONDOR SPY 100 21 APR 17 240.5/241.5/228.5/227.5 CALL/PUT @.37")
@@ -285,10 +286,30 @@ The formula is as follows:
 
 
 
-## GetOptimalDTE(trade_date, expiration_date)
+## GetOptimalDTE(trade_order, expiration_date)
 
 Returns an integer representing the number of days the order expiration was removed from the date where option premium was optimal for maximum profit. The first argument is a TOS order, the second argument is a date. The following usage would return `48`.
 
 ```excel
 =GetOptimalDTE("BOT +1 FAST 100 16 FEB 18 55 PUT @1.75 LMT", "12/30/2017")
+```
+
+
+
+## GetActualMaxProfit(trade_order, optimal_prem)
+
+Returns a currency representing the highest dollar amount to be received if the trade was closed at the optimal exit date. The first argument is a TOS order, the second argument is a string representing the max premium that could have been received since the trade was opened. The following usage would return `$61`.
+
+```excel
+=GetActualMaxProfit("BOT +1 FAST 100 16 FEB 18 55 PUT @1.75 LMT", 2.40)
+```
+
+
+
+## GetPercentOfMaxProfit(max_profit, risk, actual_max_profit)
+
+Returns the percentage of the theoretical max profit that could have been received if the trade was closed at the optimal time. These data are collected to indicate what percent of max profit is generally good to close the trade at. If there was no profitable point during the lifetime of the trade, the formula will calculate the percent of max loss. All arguments are strings. The first argument is a max profit, the second argument is the risk, and the third argument is the highest amount that could have been received if the trade was closed at the optimal exit time. The following usage would return `70%`.
+
+```excel
+=GetPercentOfMaxProfit("116", "135", "81.50")
 ```
