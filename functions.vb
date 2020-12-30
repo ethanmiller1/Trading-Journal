@@ -1,4 +1,4 @@
-Function getOptionType(trade_order As String)
+Function GetOptionType(trade_order As String)
     ' If argument is null, return null.
     If trade_order = "" Then GoTo ErrorHandl
 
@@ -25,18 +25,18 @@ Function getOptionType(trade_order As String)
     oType = WorksheetFunction.Proper(oType)
 
     ' Return option type.
-    getOptionType = oType
+    GetOptionType = oType
     Exit Function
 ErrorHandl:
-    getOptionType = ""
+    GetOptionType = ""
 End Function
 
-Function getNthWord(text As String, start_num As Integer, Optional num_words As Integer=1)
+Function GetNthWord(text As String, start_num As Integer, Optional num_words As Integer=1)
 Dim current_pos As Long
 Dim char_len As Integer
 Dim current_word_num As Integer
  
-getNthWord = ""
+GetNthWord = ""
 current_word_num = 1
  
 'Remove leading spaces.
@@ -49,7 +49,7 @@ char_len = Len(text)
 For current_pos = 1 To char_len
     ' If this is the nth word, concatinate each character until it is no longer the nth + num_words word.
     If (current_word_num >= start_num) And (current_word_num <= start_num + num_words - 1) Then
-        getNthWord = getNthWord & Mid(text, current_pos, 1)
+        GetNthWord = GetNthWord & Mid(text, current_pos, 1)
     End If
 
     ' If there is a space after this character, increment the current_word_num by 1.
@@ -59,73 +59,73 @@ For current_pos = 1 To char_len
 Next current_pos
  
 'Remove the rightmost space.
-getNthWord = Trim(getNthWord)
+GetNthWord = Trim(GetNthWord)
  
 End Function
 
-Function getExpiration(trade_order As String, option_type As String)
+Function GetExpiration(trade_order As String, option_type As String)
     Select Case option_type
     ' If option type matches case strings, return the 6th-8th word.
     Case "Combo", "Vertical", "Butterfly"
-      expDate = getNthWord(trade_order, 6, 3)
+      expDate = GetNthWord(trade_order, 6, 3)
     ' If option type matches case strings, parse the 8th word and return it with the 9th and 10th word concatenated.
     Case "Diagonal", "Calendar"
-      expDay = getNthWord(trade_order, 8)
+      expDay = GetNthWord(trade_order, 8)
       expDay = Split(expDay, "/")
-      expDate = expDay(1) & " " & getNthWord(trade_order, 9, 2)
+      expDate = expDay(1) & " " & GetNthWord(trade_order, 9, 2)
     ' If option type matches case strings, return the 5th-7th word.
     Case "Call", "Put"
-      expDate = getNthWord(trade_order,5,3)
+      expDate = GetNthWord(trade_order,5,3)
     ' If option type is an Iron Condor, return the 7th-9th word.
     Case "Iron Condor"
-      expDate = getNthWord(trade_order,7,3)
+      expDate = GetNthWord(trade_order,7,3)
     ' If there is no match, return null.
     Case Else
       GoTo ErrorHandl
     End Select
 
     ' Return the concatonated string as a date value.
-    getExpiration = DateValue(expDate)
+    GetExpiration = DateValue(expDate)
     Exit Function
 ErrorHandl:
-    getExpiration = ""
+    GetExpiration = ""
 End Function
 
-Function getSymbol(trade_order As String, option_type As String)
+Function GetSymbol(trade_order As String, option_type As String)
     ' If argument is null, return null.
     If trade_order = "" Then GoTo ErrorHandl
     
     Select Case option_type
     ' If option type is an Iron Condor, return the 5th word.
     Case "Iron Condor"
-      Symbol = getNthWord(trade_order, 5)
+      Symbol = GetNthWord(trade_order, 5)
     ' Otherwise return the 4th word.
     Case "Call", "Put"
-      Symbol = getNthWord(trade_order, 3)
+      Symbol = GetNthWord(trade_order, 3)
     Case Else
-      Symbol = getNthWord(trade_order, 4)
+      Symbol = GetNthWord(trade_order, 4)
     End Select
 
     ' Return the concatonated string as a date value.
-    getSymbol = Symbol
+    GetSymbol = Symbol
     Exit Function
 ErrorHandl:
-    getSymbol = ""
+    GetSymbol = ""
 End Function
 
-Function daysTillExp(trade_date As Date, expiration_date As Date)
+Function DaysTillExp(trade_date As Date, expiration_date As Date)
     ' If argument is null, return null.
     ' TODO: Handle #VALUE error from wrong datatype.
     If trade_date = 0 Then GoTo ErrorHandl
 
     ' Return the concatonated string as a date value.
-    daysTillExp = expiration_date - trade_date
+    DaysTillExp = expiration_date - trade_date
     Exit Function
 ErrorHandl:
-    daysTillExp = ""
+    DaysTillExp = ""
 End Function
 
-Function getStrategy(trade_order As String, option_type As String)
+Function GetStrategy(trade_order As String, option_type As String)
     ' If argument is null, return null.
     If trade_order = "" Then GoTo ErrorHandl
 
@@ -157,13 +157,13 @@ Function getStrategy(trade_order As String, option_type As String)
     End Select
 
     ' Return the concatonated string as a date value.
-    getStrategy = strategy
+    GetStrategy = strategy
     Exit Function
 ErrorHandl:
-    getStrategy = ""
+    GetStrategy = ""
 End Function
 
-Function getPosture(option_strategy As String)
+Function GetPosture(option_strategy As String)
     ' If argument is null, return null.
     If option_strategy = "" Then GoTo ErrorHandl
 
@@ -178,13 +178,13 @@ Function getPosture(option_strategy As String)
     End Select
 
     ' Return the posture of the trade.
-    getPosture = posture
+    GetPosture = posture
     Exit Function
 ErrorHandl:
-    getPosture = ""
+    GetPosture = ""
 End Function
 
-Function getStockQuote(symobol As String, trade_date As Date)
+Function GetStockQuote(symobol As String, trade_date As Date)
     ' If argument is null, return null.
     If symobol = "" Then GoTo ErrorHandl
     
@@ -227,13 +227,13 @@ Function getStockQuote(symobol As String, trade_date As Date)
     ' TODO: hande #VALUE error due to no regex matches.
 
     ' Return the stock quote.
-    getStockQuote = stockQuote
+    GetStockQuote = stockQuote
     Exit Function
 ErrorHandl:
-    getStockQuote = ""
+    GetStockQuote = ""
 End Function
 
-Function getQuoteValue(quote_key As String, stock_quote As String)
+Function GetQuoteValue(quote_key As String, stock_quote As String)
     ' If argument is null, return null.
     If stock_quote = "" Then GoTo ErrorHandl
 
@@ -245,39 +245,39 @@ Function getQuoteValue(quote_key As String, stock_quote As String)
     Set matches = regex.Execute(stock_quote)
     quoteValue = matches(0).SubMatches(0)
 
-    getQuoteValue = quoteValue
+    GetQuoteValue = quoteValue
     Exit Function
 ErrorHandl:
-    getQuoteValue = ""
+    GetQuoteValue = ""
 End Function
 
-Function getPrem(trade_order As String, option_type As String)
+Function GetPrem(trade_order As String, option_type As String)
     ' If argument is null, return null.
     If trade_order = "" Then GoTo ErrorHandl
     
     ' Get the nth word based on option type.
     Select Case option_type
     Case "Iron Condor"
-      premium = getNthWord(trade_order, 12)
+      premium = GetNthWord(trade_order, 12)
     Case "Calendar", "Diagonal"
-      premium = getNthWord(trade_order, 13)
+      premium = GetNthWord(trade_order, 13)
     Case "Call", "Put"
-      premium = getNthWord(trade_order, 10)
+      premium = GetNthWord(trade_order, 10)
     Case Else
-      premium = getNthWord(trade_order, 11)
+      premium = GetNthWord(trade_order, 11)
     End Select
 
     ' Remove @ symbol and add 0 to cast as numeric.
     premium = Replace(premium,"@","") + 0
 
     ' Return the option premium.
-    getPrem = premium
+    GetPrem = premium
     Exit Function
 ErrorHandl:
-    getPrem = ""
+    GetPrem = ""
 End Function
 
-Function getMaxProfit(trade_order As String, option_type As String, qty As String, prem As String, Optional comm As Currency = 0#, Optional risk As Currency = 0#)
+Function GetMaxProfit(trade_order As String, option_type As String, qty As String, prem As String, Optional comm As Currency = 0#, Optional risk As Currency = 0#)
     ' If argument is null, return null.
     If trade_order = "" Then GoTo ErrorHandl
     
@@ -291,7 +291,7 @@ Function getMaxProfit(trade_order As String, option_type As String, qty As Strin
       maxProfit = cPrem
     Case "Butterfly"
       ' Get strikes.
-      strikes = Split(getNthWord(trade_order, 9), "/")
+      strikes = Split(GetNthWord(trade_order, 9), "/")
       strike1 = strikes(0)
       strike2 = strikes(1)
       strike3 = strikes(2)
@@ -308,14 +308,14 @@ Function getMaxProfit(trade_order As String, option_type As String, qty As Strin
       End If
     Case "Calendar"
       maxProfit = risk * 2
-      ' TODO: getMaxProfit = maxProfit, Exit Function
+      ' TODO: GetMaxProfit = maxProfit, Exit Function
     Case "Diagonal"
       ' If debit paid was negitive (actually a credit).
       If cPrem < 0 Then
         maxProfit = Abs(cPrem)
       Else
         ' Get strikes.
-        strikes = Split(getNthWord(trade_order, 11), "/")
+        strikes = Split(GetNthWord(trade_order, 11), "/")
         strike1 = strikes(0)
         strike2 = strikes(1)
 
@@ -326,16 +326,16 @@ Function getMaxProfit(trade_order As String, option_type As String, qty As Strin
     Case "Combo"
         ' If long, stock has unlimited profit potential.
         If InStr(trade_order, "BOT") Then
-          getMaxProfit = "Undefined"
+          GetMaxProfit = "Undefined"
           Exit Function
         ' If short, stock can only drop to 0 (finite profits).
         Else
-          maxProfit = getNthWord(trade_order, 9) + cPrem
+          maxProfit = GetNthWord(trade_order, 9) + cPrem
         End If
     Case "Call"
         ' If long, call has unlimited profit potential.
         If InStr(trade_order, "BOT") Then
-          getMaxProfit = "Undefined"
+          GetMaxProfit = "Undefined"
           Exit Function
         ' If short, call can only expire worthless.
         Else
@@ -344,7 +344,7 @@ Function getMaxProfit(trade_order As String, option_type As String, qty As Strin
     Case "Put"
       ' If long, put has unlimited profit potential.
         If InStr(trade_order, "BOT") Then
-          maxProfit = getNthWord(trade_order, 8) - cPrem
+          maxProfit = GetNthWord(trade_order, 8) - cPrem
         ' If short, put can only expire worthless.
         Else
           maxProfit = cPrem
@@ -357,7 +357,7 @@ Function getMaxProfit(trade_order As String, option_type As String, qty As Strin
       ' If short, call can only expire worthless.
       Else
         ' Get strikes.
-        strikes = Split(getNthWord(trade_order, 9), "/")
+        strikes = Split(GetNthWord(trade_order, 9), "/")
         strike1 = strikes(0)
         strike2 = strikes(1)
 
@@ -369,19 +369,19 @@ Function getMaxProfit(trade_order As String, option_type As String, qty As Strin
     maxProfit = maxProfit * Abs(qty) * 100 - comm
 
     ' Return the option maxProfit.
-    getMaxProfit = maxProfit
+    GetMaxProfit = maxProfit
     Exit Function
 ErrorHandl:
-    getMaxProfit = ""
+    GetMaxProfit = ""
 End Function
 
-Function getRisk(trade_order As String, option_type As String, qty As String, prem As String, max_profit As String, Optional comm As Currency = 0)
+Function GetRisk(trade_order As String, option_type As String, qty As String, prem As String, max_profit As String, Optional comm As Currency = 0)
     ' If argument is null, return null.
     If trade_order = "" Then GoTo ErrorHandl
     
     ' TODO: Replace arguments with functions.
-    ' qty = getNthWord(trade_order,2)
-    ' prem = getPrem(trade_order, option_type)
+    ' qty = GetNthWord(trade_order,2)
+    ' prem = GetPrem(trade_order, option_type)
 
     ' Covert strings to numbers. (Currency and Integer won't accept "" as an argument, which results in a #VALUE error.)
     Dim premium As Currency
@@ -392,7 +392,7 @@ Function getRisk(trade_order As String, option_type As String, qty As String, pr
     ' Get the nth word based on option type.
     Select Case option_type
     Case "Iron Condor"
-      strikes = Split(getNthWord(trade_order, 10), "/")
+      strikes = Split(GetNthWord(trade_order, 10), "/")
       strike1 = strikes(0)
       strike2 = strikes(1)
       strike3 = strikes(2)
@@ -413,7 +413,7 @@ Function getRisk(trade_order As String, option_type As String, qty As String, pr
       ' If short, risk is spread width less credit recieved.
       If InStr(trade_order, "SOLD") Then
         ' Get strikes.
-        strikes = Split(getNthWord(trade_order, 9), "/")
+        strikes = Split(GetNthWord(trade_order, 9), "/")
         strike1 = strikes(0)
         strike2 = strikes(1)
 
@@ -425,7 +425,7 @@ Function getRisk(trade_order As String, option_type As String, qty As String, pr
     Case "Diagonal"
       If premium < 0 Then
         ' Get strikes.
-        strikes = Split(getNthWord(trade_order, 11), "/")
+        strikes = Split(GetNthWord(trade_order, 11), "/")
         strike1 = strikes(0)
         strike2 = strikes(1)
         spread = Abs(strike1 - strike2)
@@ -437,17 +437,17 @@ Function getRisk(trade_order As String, option_type As String, qty As String, pr
     Case "Combo"
       ' If short, risk is unlimited.
       If InStr(trade_order, "SOLD") Then
-        getRisk = "Undefined"
+        GetRisk = "Undefined"
         Exit Function
       ' If long, risk is capped by the floor.
       Else
-        strike1 = getNthWord(trade_order, 9)
+        strike1 = GetNthWord(trade_order, 9)
         risk = strike1 - premium
       End If
     Case "Call"
       ' If short, risk is unlimited.
       If InStr(trade_order, "SOLD") Then
-        getRisk = "Undefined"
+        GetRisk = "Undefined"
         Exit Function
       ' If long, risk is debit paid.
       Else
@@ -456,7 +456,7 @@ Function getRisk(trade_order As String, option_type As String, qty As String, pr
     Case "Put"
       ' If short, risk is capped by the floor.
       If InStr(trade_order, "SOLD") Then
-        strike1 = getNthWord(trade_order, 9)
+        strike1 = GetNthWord(trade_order, 9)
         risk = strike1 - premium
       ' If long, risk is debit paid.
       Else
@@ -470,21 +470,21 @@ Function getRisk(trade_order As String, option_type As String, qty As String, pr
     risk = risk * Abs(qty) * 100 + comm
 
     ' Return the option risk.
-    getRisk = risk
+    GetRisk = risk
     Exit Function
 IronCondor:
     risk = risk * Abs(qty) * 100 + comm
-    getRisk = risk - maxProfit
+    GetRisk = risk - maxProfit
     Exit Function
 Standard:
     risk = premium
     risk = risk * Abs(qty) * 100 + comm
-    getRisk = risk
+    GetRisk = risk
 ErrorHandl:
-    getRisk = ""
+    GetRisk = ""
 End Function
 
-Function GetPlCLose(trade_order As String, option_type As String, prem As String, max_profit As String, Optional comm As Currency = 0#)
+Function GetPLClose(trade_order As String, option_type As String, prem As String, max_profit As String, Optional comm As Currency = 0#)
     ' If argument is null, return null.
     If trade_order = "" Or prem = "" Then GoTo ErrorHandl
     
@@ -495,7 +495,7 @@ Function GetPlCLose(trade_order As String, option_type As String, prem As String
     If IsNumeric(max_profit) Then maxProfit = CCur(max_profit)
 
     ' How many shares being controlled?
-    contracts = Abs(getNthWord(trade_order,2))
+    contracts = Abs(GetNthWord(trade_order,2))
     shares = contracts * 100
     debit = premium * shares
 
@@ -506,37 +506,37 @@ Function GetPlCLose(trade_order As String, option_type As String, prem As String
       plClose = maxProfit - debit
       ' Skip comissions -- Max profits accounts for it.
     Case "Combo"
-      credit = Replace(getNthWord(trade_order, 11),"@","") + 0
+      credit = Replace(GetNthWord(trade_order, 11),"@","") + 0
       plClose = debit + (credit*shares) - comm
     Case "Vertical"
       If InStr(trade_order, "SOLD") Then
         plClose = maxProfit - debit
       Else
-        entryDebit = getPrem(trade_order, option_type)
-        risk = getRisk(trade_order, option_type, CStr(contracts), CStr(entryDebit), max_profit, comm)
+        entryDebit = GetPrem(trade_order, option_type)
+        risk = GetRisk(trade_order, option_type, CStr(contracts), CStr(entryDebit), max_profit, comm)
         credit = debit
         plClose = credit - risk
       End If
     Case Else
-      credit = getPrem(trade_order, option_type)
+      credit = GetPrem(trade_order, option_type)
       ' If credit was recieved...
       If (InStr(trade_order, "BOT") And credit < 0) Or InStr(trade_order, "SOLD") Then
         plClose = maxProfit - debit
       Else
-        risk = getRisk(trade_order, option_type, CStr(contracts), CStr(credit), max_profit, comm)
+        risk = GetRisk(trade_order, option_type, CStr(contracts), CStr(credit), max_profit, comm)
         credit = debit
         plClose = credit - risk
       End If
     End Select
 
     ' Return the option plClose.
-    GetPlCLose = plClose
+    GetPLClose = plClose
     Exit Function
 ErrorHandl:
-    GetPlCLose = ""
+    GetPLClose = ""
 End Function
 
-Function GetPlPercent(pl_closed As String, max_profit As String, max_risk As String)
+Function GetPLPercent(pl_closed As String, max_profit As String, max_risk As String)
  
     ' If argument is null, return null.
     If pl_closed = "" Then GoTo ErrorHandl
@@ -558,76 +558,76 @@ Function GetPlPercent(pl_closed As String, max_profit As String, max_risk As Str
     End If
 
     ' Return the option plPercent.
-    GetPlPercent = plPercent
+    GetPLPercent = plPercent
     Exit Function
 Undefined:
-    GetPlPercent = 0
+    GetPLPercent = 0
     Exit Function
 ErrorHandl:
-    GetPlPercent = ""
+    GetPLPercent = ""
 End Function
 
 Function GetMonth(mon_abr As String)
   monthNumber = Application.Match(mon_abr, Array("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"), 0)
-  getMonth = Evaluate(TEXT(monthNumber, "00"))
+  GetMonth = Evaluate(TEXT(monthNumber, "00"))
 End Function
 
 Function GetOptionSignature(trade_order As String)
     If trade_order = "" Then GoTo ErrorHandl
 
-    option_type = getOptionType(trade_order)
+    option_type = GetOptionType(trade_order)
 
     Select Case option_type
     ' Single Leg Options (AND P/L%)
     Case "Call", "Put"
-      optionSignature = "." & getNthWord(trade_order, 3) & getNthWord(trade_order, 7) & GetMonth(getNthWord(trade_order, 6)) & getNthWord(trade_order, 5) & Left(getNthWord(trade_order, 9), 1) & getNthWord(trade_order, 8)
+      optionSignature = "." & GetNthWord(trade_order, 3) & GetNthWord(trade_order, 7) & GetMonth(GetNthWord(trade_order, 6)) & GetNthWord(trade_order, 5) & Left(GetNthWord(trade_order, 9), 1) & GetNthWord(trade_order, 8)
     Case "Iron Condor"
-      signatureBase = getNthWord(trade_order, 5) & getNthWord(trade_order, 9) & GetMonth(getNthWord(trade_order, 8)) & getNthWord(trade_order, 7)
-      types = Split(getNthWord(trade_order, 11), "/")
+      signatureBase = GetNthWord(trade_order, 5) & GetNthWord(trade_order, 9) & GetMonth(GetNthWord(trade_order, 8)) & GetNthWord(trade_order, 7)
+      types = Split(GetNthWord(trade_order, 11), "/")
       type1 = Left(types(0), 1)
       type2 = Left(types(1), 1)
-      strikes = Split(getNthWord(trade_order, 10), "/")
+      strikes = Split(GetNthWord(trade_order, 10), "/")
       strike1 = strikes(0)
       strike2 = strikes(1)
       strike3 = strikes(2)
       strike4 = strikes(3)
       optionSignature = "." & signatureBase & type1 & strike1 & "-." & signatureBase & type1 & strike2 & "+." & signatureBase & type2 & strike3 & "-." & signatureBase & type2 & strike4
     Case "Vertical"
-      signatureBase = getNthWord(trade_order, 4) & getNthWord(trade_order, 8) & GetMonth(getNthWord(trade_order, 7)) & getNthWord(trade_order, 6) & Left(getNthWord(trade_order, 10), 1)
-      strikes = Split(getNthWord(trade_order, 9), "/")
+      signatureBase = GetNthWord(trade_order, 4) & GetNthWord(trade_order, 8) & GetMonth(GetNthWord(trade_order, 7)) & GetNthWord(trade_order, 6) & Left(GetNthWord(trade_order, 10), 1)
+      strikes = Split(GetNthWord(trade_order, 9), "/")
       strike1 = strikes(0)
       strike2 = strikes(1)
       optionSignature = "." & signatureBase & strike1 & "-." & signatureBase & strike2
     Case "Diagonal"
-      dates = Split(getNthWord(trade_order, 8), "/")
-      date1 = dates(0) & GetMonth(getNthWord(trade_order, 7)) & getNthWord(trade_order, 6)
-      date2 = getNthWord(trade_order, 10) & GetMonth(getNthWord(trade_order, 9)) & dates(1)
-      tickerSymbol = getNthWord(trade_order, 4)
-      optionType = Left(getNthWord(trade_order, 12), 1)
-      strikes = Split(getNthWord(trade_order, 11), "/")
+      dates = Split(GetNthWord(trade_order, 8), "/")
+      date1 = dates(0) & GetMonth(GetNthWord(trade_order, 7)) & GetNthWord(trade_order, 6)
+      date2 = GetNthWord(trade_order, 10) & GetMonth(GetNthWord(trade_order, 9)) & dates(1)
+      tickerSymbol = GetNthWord(trade_order, 4)
+      optionType = Left(GetNthWord(trade_order, 12), 1)
+      strikes = Split(GetNthWord(trade_order, 11), "/")
       strike1 = strikes(0)
       strike2 = strikes(1)
       optionSignature = "." & tickerSymbol & date1 & optionType & strike1 & "-." & tickerSymbol & date2 & optionType & strike2
     Case "Calendar"
-      dates = Split(getNthWord(trade_order, 8), "/")
-      date1 = dates(0) & GetMonth(getNthWord(trade_order, 7)) & getNthWord(trade_order, 6)
-      date2 = getNthWord(trade_order, 10) & GetMonth(getNthWord(trade_order, 9)) & dates(1)
-      tickerSymbol = getNthWord(trade_order, 4)
-      signaturePostfix = Left(getNthWord(trade_order, 12), 1) & getNthWord(trade_order, 11)
+      dates = Split(GetNthWord(trade_order, 8), "/")
+      date1 = dates(0) & GetMonth(GetNthWord(trade_order, 7)) & GetNthWord(trade_order, 6)
+      date2 = GetNthWord(trade_order, 10) & GetMonth(GetNthWord(trade_order, 9)) & dates(1)
+      tickerSymbol = GetNthWord(trade_order, 4)
+      signaturePostfix = Left(GetNthWord(trade_order, 12), 1) & GetNthWord(trade_order, 11)
       optionSignature = "." & tickerSymbol & date1 & signaturePostfix & "-." & tickerSymbol & date2 & signaturePostfix
     Case "Butterfly"
-      signatureBase = getNthWord(trade_order, 4) & getNthWord(trade_order, 8) & GetMonth(getNthWord(trade_order, 7)) & getNthWord(trade_order, 6) & Left(getNthWord(trade_order, 10), 1)
-      strikes = Split(getNthWord(trade_order, 9), "/")
+      signatureBase = GetNthWord(trade_order, 4) & GetNthWord(trade_order, 8) & GetMonth(GetNthWord(trade_order, 7)) & GetNthWord(trade_order, 6) & Left(GetNthWord(trade_order, 10), 1)
+      strikes = Split(GetNthWord(trade_order, 9), "/")
       strike1 = strikes(0)
       strike2 = strikes(1)
       strike3 = strikes(2)
       optionSignature = "." & signatureBase & strike1 & "-." & signatureBase & strike2 & "-." & signatureBase & strike2 & "+." & signatureBase & strike3
     Case "Combo"
-      signatureBase = getNthWord(trade_order, 4) & getNthWord(trade_order, 8) & GetMonth(getNthWord(trade_order, 7)) & getNthWord(trade_order, 6)
-      types = Split(getNthWord(trade_order, 10), "/")
+      signatureBase = GetNthWord(trade_order, 4) & GetNthWord(trade_order, 8) & GetMonth(GetNthWord(trade_order, 7)) & GetNthWord(trade_order, 6)
+      types = Split(GetNthWord(trade_order, 10), "/")
       type1 = Left(types(0), 1)
       type2 = Left(types(1), 1)
-      strike = getNthWord(trade_order, 9)
+      strike = GetNthWord(trade_order, 9)
       optionSignature = "." & signatureBase & type1 & strike & "-." & signatureBase & type2 & strike
     Case Else
     End Select
@@ -640,14 +640,14 @@ End Function
 Function GetCommission(trade_order As String)
     If trade_order = "" Then GoTo ErrorHandl
 
-    option_strategy = getOptionType(trade_order)
+    option_strategy = GetOptionType(trade_order)
     Dim qty As Integer
     Dim noOfContracts As Integer
     Dim closedQty As Integer
     Dim BASE_FEE As Currency
     Dim FEE_PER_CONTRACT As Currency
 
-    qty = getNthWord(trade_order, 2)
+    qty = GetNthWord(trade_order, 2)
     closedQty = 2
     BASE_FEE = 1.25
     FEE_PER_CONTRACT = 0.75

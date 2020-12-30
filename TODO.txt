@@ -4,14 +4,15 @@ REMAINING TASKS:
 (B) 2019-06-20 Add a function to get market posture (technical posture, trend).
 (A) 2019-06-22 Add a function to calculate the Black-scholes formula.
 (B) 2019-06-22 Use an API to retrieve implied volatility.
+(A) 2020-12-30 Incorporate commissions into existing formulas
 
 
 
 FINISHED TASKS (Ctrl+Shift+I for DateTime):
 
 x 2019-06-19 14:31 Write a function that returns the option type of a TOS data string.
-x 2019-06-19 15:18 Finish error handling for getOptionType() function when no match is found in the argument, but the argument is not null.
-x 2019-06-19 15:27 Change the return value of getOptionType() to sentence case.
+x 2019-06-19 15:18 Finish error handling for GetOptionType() function when no match is found in the argument, but the argument is not null.
+x 2019-06-19 15:27 Change the return value of GetOptionType() to sentence case.
 x 2019-06-19 16:38 Format Trading Journal.xlsm
 x 2019-06-19 18:08 Add function that gets the nth word of a string.
 x 2019-06-19 22:10 Add a function to parse the expiration date from the TOS data string (taking two arguments, the string and the Type to avoid recalculating).
@@ -37,3 +38,4 @@ x 2020-12-29 15:51 Fix null iron condor return for getRisk().
 x 2020-12-29 15:52 Add summary labels to group columns
 x 2020-12-29 21:11 Add a function that splices the option signature from the trade order
 x 2020-12-29 22:45 Add a function that calculates the commissions for a particular trade.
+x 2020-12-30 08:33 Change all function cases to Pascal Case

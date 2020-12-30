@@ -5,9 +5,9 @@
 Use conditional formatting make the color of column A indicate its market posture.
 
 ``` excel
-=getPosture(getStrategy($A7,$D7))="Neutral"
-=getPosture(getStrategy($A7,$D7))="Bullish"
-=getPosture(getStrategy($A7,$D7))="Bearish"
+=GetPosture(GetStrategy($A7,$D7))="Neutral"
+=GetPosture(GetStrategy($A7,$D7))="Bullish"
+=GetPosture(GetStrategy($A7,$D7))="Bearish"
 ```
 
 ![](https://github.com/king-melchizedek/Trading-Journal/raw/master/images/postureFormat.gif)
