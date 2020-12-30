@@ -4,7 +4,7 @@ REMAINING TASKS:
 (B) 2019-06-20 Add a function to get market posture (technical posture, trend).
 (A) 2019-06-22 Add a function to calculate the Black-scholes formula.
 (B) 2019-06-22 Use an API to retrieve implied volatility.
-(A) 2020-12-30 Incorporate commissions into existing formulas
+(B) Reduce cell dependencies by using VBA formulas
 
 
 
@@ -39,3 +39,5 @@ x 2020-12-29 15:52 Add summary labels to group columns
 x 2020-12-29 21:11 Add a function that splices the option signature from the trade order
 x 2020-12-29 22:45 Add a function that calculates the commissions for a particular trade.
 x 2020-12-30 08:33 Change all function cases to Pascal Case
+x 2020-12-30 09:42 Incorporate commissions into existing formulas
+x 2020-12-30 11:01 Copy option signature to clipboard when cell is selected

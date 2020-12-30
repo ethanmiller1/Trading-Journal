@@ -284,6 +284,7 @@ Function GetMaxProfit(trade_order As String, option_type As String, qty As Strin
     ' Convert strings to numbers. (Currency and Integer won't accept "" as an argument, which results in a #VALUE error.)
     Dim cPrem As Currency
     cPrem = CCur(prem)
+    If comm = 0 Then comm = GetCommission(trade_order)
     
     ' Get the nth word based on option type.
     Select Case option_type
@@ -388,6 +389,7 @@ Function GetRisk(trade_order As String, option_type As String, qty As String, pr
     premium = CCur(prem)
     Dim maxProfit As Currency
     If IsNumeric(max_profit) Then maxProfit = CCur(max_profit)
+    If comm = 0 Then comm = GetCommission(trade_order)
     
     ' Get the nth word based on option type.
     Select Case option_type
@@ -490,9 +492,10 @@ Function GetPLClose(trade_order As String, option_type As String, prem As String
     
     ' Covert strings to numbers.
     Dim premium As Currency
-    premium = CCur(prem)
     Dim maxProfit As Currency
+    premium = CCur(prem)
     If IsNumeric(max_profit) Then maxProfit = CCur(max_profit)
+    If comm = 0 Then comm = GetCommission(trade_order)
 
     ' How many shares being controlled?
     contracts = Abs(GetNthWord(trade_order,2))
@@ -569,7 +572,7 @@ End Function
 
 Function GetMonth(mon_abr As String)
   monthNumber = Application.Match(mon_abr, Array("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"), 0)
-  GetMonth = Evaluate(TEXT(monthNumber, "00"))
+  GetMonth = Format(monthNumber, "00")
 End Function
 
 Function GetOptionSignature(trade_order As String)
@@ -666,4 +669,28 @@ Function GetCommission(trade_order As String)
     Exit Function
 ErrorHandl:
     GetCommission = ""
+End Function
+
+Function Clipboard(Optional StoreText As String) As String
+'PURPOSE: Read/Write to Clipboard
+'Source: ExcelHero.com (Daniel Ferry)
+
+  Dim x As Variant
+
+  'Store as variant for 64-bit VBA support
+    x = StoreText
+
+  'Create HTMLFile Object
+  With CreateObject("htmlfile")
+    With .parentWindow.clipboardData
+      Select Case True
+        Case Len(StoreText)
+          'Write to the clipboard
+            .setData "text", x
+        Case Else
+          'Read from the clipboard (no variable passed through)
+            Clipboard = .GetData("text")
+      End Select
+    End With
+  End With
 End Function
