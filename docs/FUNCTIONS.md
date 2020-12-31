@@ -7,8 +7,8 @@ The Trading Journal workbook has a number of functions built into it that are al
 | [GetOptionType()](#GetOptionType())     | [GetNthWord()](#GetNthWord())           | [GetExpiration()](#GetExpiration())           | [GetSymbol()](#GetSymbol())             | [DaysTillExp()](#DaysTillExp())               |
 | [GetStrategy()](#GetStrategy())         | [GetPosture()](#GetPosture())           | [GetStockQuote()](#GetStockQuote())           | [GetQuoteValue()](#GetQuoteValue())     | [GetPrem()](#GetPrem())                       |
 | [GetMaxProfit()](#GetMaxProfit())       | [GetRisk()](#GetRisk())                 | [GetPLClose()](#GetPLClose())                 | [GetPLPercent()](#GetPLPercent())       | [GetOptionSignature()](#GetOptionSignature()) |
-| [GetCommission()](#GetCommission())     | [GetOptimalDTE()](#GetOptimalDTE())     | [GetActualMaxProfit()](#GetActualMaxProfit()) | [GetPercentOfMaxProfit()](#GetPercentOfMaxProfit()) | [ExampleFunction()](#ExampleFunction())       |
-| [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction())       | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction())       |
+| [GetCommission()](#GetCommission())     | [GetOptimalDTE()](#GetOptimalDTE())     | [GetActualMaxProfit()](#GetActualMaxProfit()) | [GetPercentOfMaxProfit()](#GetPercentOfMaxProfit()) | [GetTarget1()](#GetTarget1())     |
+| [GetTarget2()](#GetTarget2())           | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction())       | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction())       |
 
 
 
@@ -312,4 +312,24 @@ Returns the percentage of the theoretical max profit that could have been receiv
 
 ```excel
 =GetPercentOfMaxProfit("116", "135", "81.50")
+```
+
+
+
+## GetTarget1(support, resistance, entry)
+
+Returns the T1 technical target of a flag using the flag pole method. The flag pole method adds the length of the flag pole to the current high of the low day (which is also the entry). T1 occurs at 161.8% of the projected second flag pole. The following usage would return `33.01`.
+
+```excel
+=GetTarget1("30.36", "32.35", "31.78")
+```
+
+
+
+## GetTarget2(support, resistance, entry)
+
+Returns the T2 technical target of a flag using the flag pole method. The flag pole method adds the length of the flag pole to the current high of the low day (which is also the entry). T2 occurs at 200% of the projected second flag pole. The following usage would return `33.77`.
+
+```excel
+=GetTarget2("30.36", "32.35", "31.78")
 ```

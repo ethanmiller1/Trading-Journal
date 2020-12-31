@@ -765,3 +765,28 @@ Undefined:
 ErrorHandl:
     GetPercentOfMaxProfit = ""
 End Function
+
+Function GetTarget(support As String, resistance As String, entry As String, percent As Double)
+    If support = "" Or resistance = "" Then GoTo ErrorHandl
+
+    operator = IIf(support<resistance, 1, -1)
+
+    If entry <> "" Then
+      target = entry + operator * ABS(resistance - support) * (percent - 1)
+    Else
+      target = resistance + operator * ABS(resistance - support) * (percent - 1)
+    End If
+
+    GetTarget = target
+    Exit Function 
+ErrorHandl:
+    GetTarget = ""
+End Function
+
+Function GetTarget1(support As String, resistance As String, entry As String)
+    GetTarget1 = GetTarget(support, resistance, entry, 1.618)
+End Function
+
+Function GetTarget2(support As String, resistance As String, entry As String)
+    GetTarget2 = GetTarget(support, resistance, entry, 2)
+End Function
