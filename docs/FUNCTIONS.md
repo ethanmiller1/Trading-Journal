@@ -298,7 +298,7 @@ Returns an integer representing the number of days the order expiration was remo
 
 ## GetActualMaxProfit(trade_order, optimal_prem)
 
-Returns a currency representing the highest dollar amount to be received if the trade was closed at the optimal exit date. The first argument is a TOS order, the second argument is a string representing the max premium that could have been received since the trade was opened. The following usage would return `$61`.
+Returns a currency representing the highest dollar amount to be received if the trade was closed at the optimal exit date. The optimal exit date is determined as the result of an historical analysis of the underlying's price levels while the trade was open. Assuming a bullish posture, the hishest price level reached is the "actual max profit" we could have received based on real hstorical price movement. The first argument is a TOS order, the second argument is a string representing the max premium that could have been received since the trade was opened. The following usage would return `$61`.
 
 ```excel
 =GetActualMaxProfit("BOT +1 FAST 100 16 FEB 18 55 PUT @1.75 LMT", 2.40)
@@ -324,7 +324,41 @@ Returns the T1 technical target of a flag using the flag pole method. The flag p
 =GetTarget1("30.36", "32.35", "31.78")
 ```
 
+The purpose tracking both T1 and T2 targets of each order is to determine how often T2 is reached compared to T1 and isolate the conditions surrounding the observed performance. Condition markers may be:
 
+1. Ticker Symbol
+1. Trend
+1. Posture
+1. Price Pattern
+
+This data will be considered in crafting target rules.
+
+## Column Explainations:
+
+| Column Alias | Column Name | Example String                                                           |
+| ------------ | :---------- |:------------------------------------------------------------------------ |
+| [prot]       | Protection  | The next low (i.e. a candle that moves lower than yesterday's low). If we have a series to higher lows, and then a candle has a low that's lower than yesterday's low, we want to add a stop 20 cents below the new low in case it continues dropping. What if it closes below yesterday's close? |
+| Last R (R3)   | Last Resistance  | New Resistance. If bullish, the next high. If bearish, the next low. New high (or low) becomes new resistance. The highest price level the underlying reached while our trade was open. This data is used to determine target rules based on how close to T1 and T2 targerts the underlying reached. |
+| Last S (S3)   | Last Support  | New Support. If bullish, the next low. If bearish, the next high. New low (or high) becomes new support. The lowest price level the underlying reached while our trade was open. This data is used to determine what appropriate stop rules are. |
+
+#### 3 Rule Outcomes
+
+1. Saved - Would a stop rule have saved us from losing a lot of money before it reached an extreme low?
+1. Damaged - Would a stop rule have caused us to exit the trade right before the stock went to our target?
+1. Unaffected - Would a stop rule have been irrelevent because the lowest price never reached it anyway?
+
+#### Stop Rules
+
+1. R1 % Stop Loss - Resistance minus 1% of resistance
+
+![](https://i.ibb.co/ykHV8WF/image.png) 
+
+2. R1 Fixed Stop Loss - Resistance minus 20 cents
+1. S2 % Stop Loss - Support minus 1%
+1. S2 Fixed Stop Loss - Support minus 20 cents      
+1. P1 %
+1. P1 Fixed
+1. Max Loss % - 50% of an option's max loss
 
 ## GetTarget2(support, resistance, entry)
 
@@ -333,3 +367,6 @@ Returns the T2 technical target of a flag using the flag pole method. The flag p
 ```excel
 =GetTarget2("30.36", "32.35", "31.78")
 ```
+
+
+## GetStopLossRule()

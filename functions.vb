@@ -790,3 +790,12 @@ End Function
 Function GetTarget2(support As String, resistance As String, entry As String)
     GetTarget2 = GetTarget(support, resistance, entry, 2)
 End Function
+
+Enum StopLossRule 
+  FIXED_RESISTANCE = .20
+  FIXED_SUPPORT = .20
+  FIXED_PROTECTION = .20
+  PERCENT_RESISTANCE = .01
+  PERCENT_SUPPORT = .01
+  PERCENT_MAX_LOSS = .50
+End Enum 

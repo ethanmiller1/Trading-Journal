@@ -4,3 +4,5 @@ Private Sub Worksheet_SelectionChange(ByVal Target As Range)
   MyCell = Range("A" & Target.Row).text
   Clipboard (GetOptionSignature(MyCell))
 End Sub
+
+' TODO: After date column is populated, pull current high/low for this stock

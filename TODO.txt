@@ -4,6 +4,8 @@ REMAINING TASKS:
 (A) 2019-06-22 Add a function to calculate the Black-scholes formula.
 (B) 2019-06-22 Use an API to retrieve implied volatility.
 (B) Reduce cell dependencies by using VBA formulas
+(B) Add column for images in column explainations table. 
+
 
 
 
