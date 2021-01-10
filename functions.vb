@@ -1,3 +1,12 @@
+Enum StopLossRule 
+  FIXED_RESISTANCE
+  FIXED_SUPPORT
+  FIXED_PROTECTION
+  PERCENT_RESISTANCE
+  PERCENT_SUPPORT
+  PERCENT_MAX_LOSS
+End Enum
+
 Function GetOptionType(trade_order As String)
     ' If argument is null, return null.
     If trade_order = "" Then GoTo ErrorHandl
@@ -791,11 +800,87 @@ Function GetTarget2(support As String, resistance As String, entry As String)
     GetTarget2 = GetTarget(support, resistance, entry, 2)
 End Function
 
-Enum StopLossRule 
-  FIXED_RESISTANCE = .20
-  FIXED_SUPPORT = .20
-  FIXED_PROTECTION = .20
-  PERCENT_RESISTANCE = .01
-  PERCENT_SUPPORT = .01
-  PERCENT_MAX_LOSS = .50
-End Enum 
+Function GetStopLossRule(ByVal rule As StopLossRule)
+  Select Case rule
+    Case StopLossRule.FIXED_RESISTANCE
+      stopLoss = .20
+    Case StopLossRule.FIXED_SUPPORT
+      stopLoss = .20
+    Case StopLossRule.FIXED_PROTECTION
+      stopLoss = .20
+    Case StopLossRule.PERCENT_RESISTANCE
+      stopLoss = .01
+    Case StopLossRule.PERCENT_SUPPORT
+      stopLoss = .01
+    Case StopLossRule.PERCENT_MAX_LOSS
+      stopLoss = .50
+    Case Else
+      stopLoss = 0
+  End Select
+  GetStopLossRule = stopLoss
+End Function
+
+Function GetStopLoss(pattern As String, support As Currency, resistance As Currency, stopReference As String, entryReference As Currency, returnOnRisk As String, target1 As Currency, target2 As Currency, latestSupport As String)
+    If latestSupport = "" Then GoTo ErrorHandl
+
+    ' Convert strings to currency
+    Dim curStopReference As Currency
+    If IsNumeric(stopReference) Then curStopReference = CCur(stopReference)
+
+    postureAdjustment = IIf(IsBullish(support, resistance), 1, -1)
+
+    ' If stopReferene doesn't exist, use resistance as the stopReference
+    If stopReference <> "" Then
+      ' Add fixed adjustment to the stop reference
+      stopLoss = curStopReference - GetStopLossRule(FIXED_SUPPORT) * postureAdjustment
+    Else
+      ' Use 50% of the option's max loss as your stop (max loss is a negative number)
+      stopLevel = IIf(entryReference <> 0, entryReference, resistance)
+      optionMaxLoss = GetOptionMaxLoss(pattern, resistance, entryReference, returnOnRisk, target1, target2)
+      stopLoss = stopLevel + optionMaxLoss * GetStopLossRule(PERCENT_MAX_LOSS) * postureAdjustment
+    End If
+
+    GetStopLoss = stopLoss
+    Exit Function
+ErrorHandl:
+    GetStopLoss = ""
+End Function
+
+Function IsBullish(support As Currency, resistance As Currency)
+    IsBullish = support < resistance
+End Function
+
+Function GetOptionMaxLoss(pattern As String, resistance As Currency, entry As Currency, returnOnRisk As String, target1 As Currency, target2 As Currency)
+    If pattern = "" Then GoTo ErrorHandl
+
+    ' TODO: If scaling, use max loss calculated above.
+
+    ' Convert strings to currency
+    Dim curReturnOnRisk As Currency
+    If IsNumeric(returnOnRisk) Then curReturnOnRisk = CCur(returnOnRisk)
+
+    ' TODO: Get from averaging recorded ROR values from Trading Journal
+    typicalROR = 0.8
+
+    ror = IIf(curReturnOnRisk <> 0, curReturnOnRisk, typicalROR)
+    maxLoss = -1 / ror * GetMaxGain(resistance, entry, target1, target2)
+
+    GetOptionMaxLoss = maxLoss
+    Exit Function
+ErrorHandl:
+    GetOptionMaxLoss = ""
+End Function
+
+Function GetMaxGain(resistance As Currency, entry As Currency, target1 As Currency, target2 As Currency)
+    If target1 = 0 And target2 = 0 Then GoTo ErrorHandl
+
+    ' TODO: Which Target based on Pattern Target Realiability data
+    whichTarget = "T2"
+
+    maxGain = Abs(IIf(whichTarget = "T1", target1, target2) - IIf(entry <> 0, entry, resistance))
+
+    GetMaxGain = maxGain
+    Exit Function
+ErrorHandl:
+    GetMaxGain = ""
+End Function
