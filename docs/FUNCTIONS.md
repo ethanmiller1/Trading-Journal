@@ -360,6 +360,11 @@ This data will be considered in crafting target rules.
 1. P1 Fixed
 1. Max Loss % - 50% of an option's max loss
 
+#### Spreadsheet Decisions
+
+The bane of fast spreadsheets is said to be a lot of cell references. It gives rise to the question, "Should I calculate the number again, or reference the cell that already calculated it?"
+The opinion of this Trading Journal is to reference cells that already calculated it. These calculated values are stored as memory in the file. Processing (making the calculations) 
+is what takes time. Memory only increases file size. Since the data we are storing is negligible, we will prefer to store data and reference it rather than process it twice.
 ## GetTarget2(support, resistance, entry)
 
 Returns the T2 technical target of a flag using the flag pole method. The flag pole method adds the length of the flag pole to the current high of the low day (which is also the entry). T2 occurs at 200% of the projected second flag pole. The following usage would return `33.77`.
@@ -369,4 +374,50 @@ Returns the T2 technical target of a flag using the flag pole method. The flag p
 ```
 
 
-## GetStopLossRule()
+## GetStopLoss()
+
+## GetTargetProfit(resistance, entryReference, target1, target2[, whichTarget])
+
+Theoretical Max gain for an open position may be capped by technical exit strategies. For example, if I have a Bullish Short Call Vertical Spread with the Short Call at 350 and the Long Call way OTM at 400, my theoretical max profit is the premium I received for shorting the ATM Call minus the premium I payed for buying the OTM Call (say 44.05). But because of my technical rules, I'm going to exit the trade if it reaches T2, which means I won't reach theoretical max profit. My true max profit is the delta on the difference between my technical target and entry price. Let's say T2 is $396 and my Entry was $339. The max price movement we will benefit from is $57. If our delta is .7, the Spread we sold for 44.05 will be worth 4.15 (44.05 - 57 * .7), which means we pocket $39.90 if we buy it back at that price point.
+
+Of if we buy a Call, our max profit is unlimited, but again, it's capped by our target rules. This method is not so much an attempt to make minor adjustments to theoretical max profit as it is to put a price point on orders with undefined max gain.
+
+The following usage would return `35.08`.
+
+```excel
+=GetTarget2("352.23", "338.94", "374.02", "395.70", "T1")
+```
+
+## GetOptionMaxLoss(pattern, resistance, entry, returnOnRisk, target1, target2)
+
+- IF( # = "", duplicate from parent cell )
+- -1 / Option ROR * Max Gain
+- -1 / Average ROR * Max Gain
+
+Return on Risk is the ratio of how much profit potential I have against the risk I'm taking. I can extract that ratio out and apply it against my target profit to approximate the actual max loss.
+
+Max loss is calculated as the premium you pay to buy an option, or the strike price minus the premium you receive to sell the option.
+
+``` math
+risk = strike1 - premium 
+Return On Risk = Max Profit / Risk
+
+41% = $116 / $285
+
+Max Gain = $116
+Max Loss = $285
+Target Gain = $94
+ROR = 41%
+
+I'm scaling both numbers down by 81%
+94 / 116 = 81%
+81% * 285 = 230
+
+Target Gain / Loss Limit = ROR
+Target Gain = Loss Limit * ROR
+(1 / ROR) * Target Gain = Loss Limit
+
+(-1 / 41%) * $94  = $229
+
+Loss Limit = $229
+```

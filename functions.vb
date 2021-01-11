@@ -863,7 +863,7 @@ Function GetOptionMaxLoss(pattern As String, resistance As Currency, entry As Cu
     typicalROR = 0.8
 
     ror = IIf(curReturnOnRisk <> 0, curReturnOnRisk, typicalROR)
-    maxLoss = -1 / ror * GetMaxGain(resistance, entry, target1, target2)
+    maxLoss = -1 / ror * GetTargetProfit(resistance, entry, target1, target2)
 
     GetOptionMaxLoss = maxLoss
     Exit Function
@@ -871,16 +871,17 @@ ErrorHandl:
     GetOptionMaxLoss = ""
 End Function
 
-Function GetMaxGain(resistance As Currency, entry As Currency, target1 As Currency, target2 As Currency)
+Function GetTargetProfit(resistance As Currency, entry As Currency, target1 As Currency, target2 As Currency)
     If target1 = 0 And target2 = 0 Then GoTo ErrorHandl
 
     ' TODO: Which Target based on Pattern Target Realiability data
     whichTarget = "T2"
 
+    ' TODO: This is the max stock movement. Multiply this number by delta to get true max gain.
     maxGain = Abs(IIf(whichTarget = "T1", target1, target2) - IIf(entry <> 0, entry, resistance))
 
-    GetMaxGain = maxGain
+    GetTargetProfit = maxGain
     Exit Function
 ErrorHandl:
-    GetMaxGain = ""
+    GetTargetProfit = ""
 End Function
