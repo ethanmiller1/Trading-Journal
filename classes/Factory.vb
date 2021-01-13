@@ -29,31 +29,6 @@ Enum StopLossFields
   MAX_LOSS_PERCENT_EXIT_RULE
 End Enum
 
-Public Function CreateStopRule(Strategy As String, ConditionalTrigger As String, PriceLevel As String, AmountType As String, ExitRule As StopLossRule) As StopRule
-    Dim stop_rule As StopRule
-    Set stop_rule = New StopRule
-    With stop_rule
-      .Strategy = Strategy
-      .ConditionalTrigger = ConditionalTrigger
-      .PriceLevel = PriceLevel
-      .AmountType = AmountType
-      .ExitRule = ExitRule
-    End With
-    Set CreateStopRule = stop_rule
-End Function
-
-Function GetFixedStop2Rule(pattern As String)
-  On Error GoTo ErrorHandl
-  If pattern = "" Then GoTo ErrorHandl
-  colOffset = StopLossFields.S2_FIXED_EXIT_RULE + 2
-  foundValue = Application.WorksheetFunction.VLookup(pattern, [Strategic_Stop_Loss_Rules_Table], colOffset, False)
-  GetFixedStop2Rule = foundValue
-  Exit Function
-ErrorHandl:
-    GetFixedStop2Rule = ""
-End Function
-
-
 Public LongCallVertical As StopRule
 Public ShortPutVertical As StopRule
 Public LongSynthetic As StopRule
@@ -70,44 +45,67 @@ Public IronCondor As StopRule
 Public Butterfly As StopRule
 Public Calendar As StopRule
 
-' TODO: Add button next to table, "Update Calculations"
+Public Function CreateStopRule(strategy As String) As StopRule
+    Dim stop_rule As StopRule
+    Set stop_rule = New StopRule
+    Dim ExitRule As StopLossFields
 
-Public Function Instantiate(ByRef className As String) As Object
-  Select className
-    Case "Dog"
-      If LongCallVertical Is Nothing then
-        Set LongCallVertical = CreateStopRule("LongCallVertical", "Option", "Debit", "Percent", GetStopLossRule(FIXED_SUPPORT))
-        Set LongCallVertical = CreateStopRule("LongCallVertical", "Option", "Credit", "Percent", GetStopLossRule(FIXED_SUPPORT))
-        Set LongCallVertical = CreateStopRule("LongCallVertical", "Market", "Option", "Fixed", GetStopLossRule(FIXED_SUPPORT))
-        Set LongCallVertical = CreateStopRule("LongCallVertical", "Option", "Debit", "Percent", GetStopLossRule(FIXED_SUPPORT))
-        Set LongCallVertical = CreateStopRule("LongCallVertical", "Option", "Bid", "Percent", GetStopLossRule(FIXED_SUPPORT))
-        Set LongCallVertical = CreateStopRule("LongCallVertical", "Market", "Ask", "Fixed", GetStopLossRule(FIXED_SUPPORT))
-        Set LongCallVertical = CreateStopRule("LongCallVertical", "Option", "Debit", "Percent", GetStopLossRule(FIXED_SUPPORT))
-        Set LongCallVertical = CreateStopRule("LongCallVertical", "Market", "Option", "Fixed", GetStopLossRule(FIXED_SUPPORT))
-        Set LongCallVertical = CreateStopRule("LongCallVertical", "Market", "Option", "Fixed", GetStopLossRule(FIXED_SUPPORT))
-        Set LongCallVertical = CreateStopRule("LongCallVertical", "Option", "Debit", "Percent", GetStopLossRule(FIXED_SUPPORT))
-        Set LongCallVertical = CreateStopRule("LongCallVertical", "Option", "Bid", "Percent", GetStopLossRule(FIXED_SUPPORT))
-        Set LongCallVertical = CreateStopRule("LongCallVertical", "Market", "Ask", "Fixed", GetStopLossRule(FIXED_SUPPORT))
-        Set LongCallVertical = CreateStopRule("LongCallVertical", "Option", "Max Risk", "Percent", GetStopLossRule(FIXED_SUPPORT))
-        Set LongCallVertical = CreateStopRule("LongCallVertical", "Option", "Debit", "Percent", GetStopLossRule(FIXED_SUPPORT))
-        Set LongCallVertical = CreateStopRule("LongCallVertical", "Option", "Debit", "Percent", GetStopLossRule(FIXED_SUPPORT))
+    ConditionalTrigger = GetStopRule(strategy, CONDITIONAL_TRIGGER)
+    PriceLevel = GetStopRule(strategy, PRICE_LEVEL)
+    AmountType = GetStopRule(strategy, AMOUNT_TYPE)
 
+    whichRule = IIf(PriceLevel = "Resistance", 0, 2) + IIf(AmountType = "Percent", 1, 2) + IIf(ConditionalTrigger = "Option", 4, 0)
+    Select Case whichRule
+      Case 1
+        ExitRule = R1_PERCENT_EXIT_RULE
+      Case 2
+        ExitRule = R1_FIXED_EXIT_RULE
+      Case 3
+        ExitRule = S2_PERCENT_EXIT_RULE
+      Case 4
+        ExitRule = S2_FIXED_EXIT_RULE
+      Case Else
+        ExitRule = MAX_LOSS_PERCENT_EXIT_RULE
+    End Select
 
-      Else
-        Err.Raise 1 + vbObjectError, "Factory.Instantiate", "Instantiation failed. There already exists an instance of " & className
-      End If
-  End Select
-
-  Set Instantiate = New Dog
+    With stop_rule
+      .strategy = strategy
+      .ConditionalTrigger = ConditionalTrigger
+      .PriceLevel = PriceLevel
+      .AmountType = AmountType
+      .ExitRule = GetStopRule(strategy, ExitRule)
+    End With
+    Set CreateStopRule = stop_rule
 End Function
 
-' Singleton pattern
-Public Function GetShared() As myClass
+Function GetStopRule(pattern As String, field As StopLossFields)
+  On Error GoTo ErrorHandl
+  If pattern = "" Then GoTo ErrorHandl
+  colOffset = field + 2
+  foundValue = Application.WorksheetFunction.VLookup(pattern, [Strategic_Stop_Loss_Rules_Table], colOffset, False)
+  GetStopRule = foundValue
+  Exit Function
+ErrorHandl:
+    GetStopRule = ""
+End Function
 
-    If objSharedClass Is Nothing Then
-        Set objSharedClass = New myClass
-    End If
-
-    Set GetShared = objSharedClass
-
+' TODO: Add button next to table, "Update Calculations"
+Public Function Instantiate()
+  If LongCallVertical Is Nothing Then
+    Set LongCallVertical = CreateStopRule("Long Call Vertical")
+    Set ShortPutVertical = CreateStopRule("Short Put Vertical")
+    Set LongSynthetic = CreateStopRule("Long Synthetic")
+    Set LongCallDiagonal = CreateStopRule("Long Call Diagonal")
+    Set LongCall = CreateStopRule("Long Call")
+    Set ShortPut = CreateStopRule("Short Put")
+    Set LongPutVertical = CreateStopRule("Long Put Vertical")
+    Set ShortCallVertical = CreateStopRule("Short Call Vertical")
+    Set ShortSynthetic = CreateStopRule("Short Synthetic")
+    Set LongPutDiagonal = CreateStopRule("Long Put Diagonal")
+    Set LongPut = CreateStopRule("Long Put")
+    Set ShortCall = CreateStopRule("Short Call")
+    Set IronCondor = CreateStopRule("Iron Condor")
+    Set Butterfly = CreateStopRule("Butterfly")
+    Set Calendar = CreateStopRule("Calendar")
+  End If
 End Function
