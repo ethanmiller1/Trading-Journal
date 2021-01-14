@@ -1,4 +1,4 @@
-Public Strategy As String
+Public Name As String
 Public ConditionalTrigger As String
 Public PriceLevel As String
 Public AmountType As String
