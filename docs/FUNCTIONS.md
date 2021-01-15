@@ -4,11 +4,12 @@ The Trading Journal workbook has a number of functions built into it that are al
 
 | Built-in Functions                      |                                         |                                               |                                         |                                               |
 | --------------------------------------- | :-------------------------------------- | :-------------------------------------------- | :-------------------------------------- | :-------------------------------------------- |
-| [GetOptionType()](#GetOptionType())     | [GetNthWord()](#GetNthWord())           | [GetExpiration()](#GetExpiration())           | [GetSymbol()](#GetSymbol())             | [DaysTillExp()](#DaysTillExp())               |
+| [GetOptionType()](#getoptiontypetext)     | [GetNthWord()](#getnthwordtext-start_num-num_words())           | [GetExpiration()](#getexpirationtrade_order-option_type())           | [GetSymbol()](#getsymboltrade_order-option_type())             | [DaysTillExp()](#daystillexptrade_date-expiration_date())               |
 | [GetStrategy()](#GetStrategy())         | [GetPosture()](#GetPosture())           | [GetStockQuote()](#GetStockQuote())           | [GetQuoteValue()](#GetQuoteValue())     | [GetPrem()](#GetPrem())                       |
 | [GetMaxProfit()](#GetMaxProfit())       | [GetRisk()](#GetRisk())                 | [GetPLClose()](#GetPLClose())                 | [GetPLPercent()](#GetPLPercent())       | [GetOptionSignature()](#GetOptionSignature()) |
 | [GetCommission()](#GetCommission())     | [GetOptimalDTE()](#GetOptimalDTE())     | [GetActualMaxProfit()](#GetActualMaxProfit()) | [GetPercentOfMaxProfit()](#GetPercentOfMaxProfit()) | [GetTarget1()](#GetTarget1())     |
-| [GetTarget2()](#GetTarget2())           | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction())       | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction())       |
+| [GetTarget2()](#GetTarget2())           | [GetTargetProfit()](#ExampleFunction()) | [GetOptionMaxLoss()](#ExampleFunction())      | [GetStop()](#ExampleFunction())         | [ExampleFunction()](#ExampleFunction())       |
+| [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction())       | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction())       |
 
 
 
@@ -373,9 +374,6 @@ Returns the T2 technical target of a flag using the flag pole method. The flag p
 =GetTarget2("30.36", "32.35", "31.78")
 ```
 
-
-## GetStopLoss()
-
 ## GetTargetProfit(resistance, entryReference, target1, target2[, whichTarget])
 
 Theoretical Max gain for an open position may be capped by technical exit strategies. For example, if I have a Bullish Short Call Vertical Spread with the Short Call at 350 and the Long Call way OTM at 400, my theoretical max profit is the premium I received for shorting the ATM Call minus the premium I payed for buying the OTM Call (say 44.05). But because of my technical rules, I'm going to exit the trade if it reaches T2, which means I won't reach theoretical max profit. My true max profit is the delta on the difference between my technical target and entry price. Let's say T2 is $396 and my Entry was $339. The max price movement we will benefit from is $57. If our delta is .7, the Spread we sold for 44.05 will be worth 4.15 (44.05 - 57 * .7), which means we pocket $39.90 if we buy it back at that price point.
@@ -394,7 +392,7 @@ The following usage would return `35.08`.
 - -1 / Option ROR * Max Gain
 - -1 / Average ROR * Max Gain
 
-Return on Risk is the ratio of how much profit potential I have against the risk I'm taking. I can extract that ratio out and apply it against my target profit to approximate the actual max loss.
+Return on Risk is the ratio of how much profit potential I have against the risk I'm taking. I can extract that ratio out and apply it against my target profit (which is my realistic max profit since I will exit the trade at that price point) to approximate the actual max loss.
 
 Max loss is calculated as the premium you pay to buy an option, or the strike price minus the premium you receive to sell the option.
 
@@ -421,3 +419,23 @@ Target Gain = Loss Limit * ROR
 
 Loss Limit = $229
 ```
+
+
+## GetStop(pattern, support, resistance, stop_reference)
+
+This function uses stop rules based on the given price pattern to calculate the market stop loss. The market stop loss is the price in the underlying at which we want to cut our losses.
+
+There are 12 possible outcomes:
+
+1. Bullish Support Percent: `support - (support * technicalStopRule.ExitRule)`
+1. Bearish Support Percent: `support + (support * technicalStopRule.ExitRule)`
+1. Bullish Support Fixed: `support - technicalStopRule.ExitRule`
+1. Bearish Support Fixed: `support + technicalStopRule.ExitRule`
+1. Bullish Resistance Percent: `resistance - (resistance * technicalStopRule.ExitRule)`
+1. Bearish Resistance Percent: `resistance + (resistance * technicalStopRule.ExitRule)`
+1. Bullish Resistance Fixed: `resistance - technicalStopRule.ExitRule`
+1. Bearish Resistance Fixed: `resistance + technicalStopRule.ExitRule`
+1. Bullish Candlstick Low Percent: `stopReference - (stopReference * technicalStopRule.ExitRule)`
+1. Bearish Candlstick Low Percent: `stopReference + (stopReference * technicalStopRule.ExitRule)`
+1. Bullish Candlstick Low Fixed: `stopReference - technicalStopRule.ExitRule`
+1. Bearish Candlstick Low Fixed: `stopReference + technicalStopRule.ExitRule`

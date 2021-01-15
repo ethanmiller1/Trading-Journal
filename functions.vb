@@ -847,6 +847,7 @@ ErrorHandl:
 End Function
 
 Function IsBullish(support As Currency, resistance As Currency)
+' Determines the market posture (note this is not the posture of your option)
     IsBullish = support < resistance
 End Function
 
@@ -884,4 +885,73 @@ Function GetTargetProfit(resistance As Currency, entry As Currency, target1 As C
     Exit Function
 ErrorHandl:
     GetTargetProfit = ""
+End Function
+
+Private Function GetTechnicalPriceRule(pattern As String)
+' TODO: Learn if the workbook has to recalculate all the cells that depend on these singletons every open
+    If pattern = "" Then GoTo ErrorHandl
+    Dim rule As StopRule
+
+    'TODO: Remove after done editing workbook.
+    Call InstantiateSingletons
+
+    Select Case pattern
+      Case "Symmetrical Triangle"
+        Set rule = SymmetricalTriangle
+      Case "Price Channel"
+        Set rule = PriceChannel
+      Case "Flag"
+        Set rule = Flag
+      Case "Pennant"
+        Set rule = Pennant
+      Case "Breakout"
+        Set rule = Breakout
+      Case "Triangle Breakout"
+        Set rule = TriangleBreakout
+      Case "Double Bottom"
+        Set rule = DoubleBottom
+      Case "Triple Bottom"
+        Set rule = TripleBottom
+      Case "H&S Bottom"
+        Set rule = HAndSBottom
+      Case "Ascending Triangle"
+        Set rule = AscendingTriangle
+      Case "Double Top"
+        Set rule = DoubleTop
+      Case "Triple Top"
+        Set rule = TripleTop
+      Case "Head and Shoulders"
+        Set rule = HeadAndShoulders
+      Case "Descending Triangle"
+        Set rule = DescendingTriangle
+    End Select
+    Set GetTechnicalPriceRule = rule
+    Exit Function
+ErrorHandl:
+    GetTechnicalPriceRule = ""
+End Function
+
+
+Function GetStop(pattern As String, support As Currency, resistance As Currency, stop_reference As String)
+    If pattern = "" Then GoTo ErrorHandl
+
+    Dim technicalStopRule as StopRule
+    Set technicalStopRule = GetTechnicalPriceRule(pattern)
+    postureAdjustment = IIf(IsBullish(support, resistance), 1, -1)
+    Dim priceLevel As Currency
+    Select Case technicalStopRule.PriceLevel
+      Case "Support"
+        priceLevel = support
+      Case "Resistance"
+        priceLevel = resistance
+      Case "Candlestick Low"
+        If Not IsNumeric(stop_reference) Then GoTo ErrorHandl
+        priceLevel = CCur(stop_reference)
+    End Select
+    fixedOrPercent = IIf(technicalStopRule.AmountType = "Percent", priceLevel, 1)
+
+    GetStop = priceLevel - fixedOrPercent * technicalStopRule.ExitRule * postureAdjustment
+    Exit Function
+ErrorHandl:
+    GetStop = ""
 End Function
