@@ -399,7 +399,7 @@ Return on Risk is the ratio of how much profit potential I have against the risk
 
 Max loss is calculated as the premium you pay to buy an option, or the strike price minus the premium you receive to sell the option.
 
-``` math
+``` json
 risk = strike1 - premium 
 Return On Risk = Max Profit / Risk
 
@@ -448,3 +448,18 @@ This function calculates the stop loss based on option value. Default is 50% of 
 ## GetProtection(support, resistance, protection_reference)
 
 A protection rule is a response to an unexpected movement in a price pattern. If a candlestick in a bull flag moves lower than the previous day's low, this is an indicator that the bull flag may reverse before reaching it's target. In order to cut our losses, we put a protective stop 20 cents below the new low day.
+
+
+## GetPercentRun(support, resistance, entry_reference, latest_resistance)
+
+This method calculates the price movement (or "Run", calculated as the highest price level the stock reached minus our entry) against the expected price movement (length of flag pole or difference between resistance and support). The expected run is the length of the flag pole (200%). Did the price run higher than that? Did it run lower?
+
+```json
+FORMULA:
+(Length + Run) / Length
+
+DEFINITIONS:
+Length = Resistance - Support    <----- (length of flag pole)
+Run = Last R - Entry      <----- (price movement after entering the trade)
+Target Run = ( Difference + Target Value - Entry ) / Difference
+``````

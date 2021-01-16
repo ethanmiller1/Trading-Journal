@@ -1038,3 +1038,17 @@ Function GetProtection(support As Currency, resistance As Currency, protection_r
 ErrorHandl:
     GetProtection = ""
 End Function
+
+Function GetPercentRun(support As Currency, resistance As Currency, entry_reference As Currency, latest_resistance As Currency)
+    If latest_resistance = 0 Then GoTo ErrorHandl
+
+    is_bullish = IsBullish(support, resistance)
+    priceLevel = IIf(entry_reference <> 0, entry_reference, resistance)
+    difference = IIf(is_bullish, (resistance - support), (support - resistance))
+    price_movement = IIf(is_bullish, (latest_resistance - priceLevel), (priceLevel - latest_resistance))
+
+    GetPercentRun = (difference + price_movement) / difference
+    Exit Function
+ErrorHandl:
+    GetPercentRun = ""
+End Function
