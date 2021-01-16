@@ -8,7 +8,7 @@ The Trading Journal workbook has a number of functions built into it that are al
 | [GetStrategy()](#GetStrategy())         | [GetPosture()](#GetPosture())           | [GetStockQuote()](#GetStockQuote())           | [GetQuoteValue()](#GetQuoteValue())     | [GetPrem()](#GetPrem())                       |
 | [GetMaxProfit()](#GetMaxProfit())       | [GetRisk()](#GetRisk())                 | [GetPLClose()](#GetPLClose())                 | [GetPLPercent()](#GetPLPercent())       | [GetOptionSignature()](#GetOptionSignature()) |
 | [GetCommission()](#GetCommission())     | [GetOptimalDTE()](#GetOptimalDTE())     | [GetActualMaxProfit()](#GetActualMaxProfit()) | [GetPercentOfMaxProfit()](#GetPercentOfMaxProfit()) | [GetTarget1()](#GetTarget1())     |
-| [GetTarget2()](#GetTarget2())           | [GetTargetProfit()](#ExampleFunction()) | [GetOptionMaxLoss()](#ExampleFunction())      | [GetStop()](#ExampleFunction())         | [ExampleFunction()](#ExampleFunction())       |
+| [GetTarget2()](#GetTarget2())           | [GetTargetProfit()](#ExampleFunction()) | [GetOptionMaxLoss()](#ExampleFunction())      | [GetMarketStop()](#ExampleFunction())         | [ExampleFunction()](#ExampleFunction())       |
 | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction())       | [ExampleFunction()](#ExampleFunction()) | [ExampleFunction()](#ExampleFunction())       |
 
 
@@ -386,6 +386,9 @@ The following usage would return `35.08`.
 =GetTarget2("352.23", "338.94", "374.02", "395.70", "T1")
 ```
 
+## GetTDADefaultStopLoss(pattern, support, resistance, stopReference, entryReference, returnOnRisk, target1, target2, latestSupport)
+Explanation pending...
+
 ## GetOptionMaxLoss(pattern, resistance, entry, returnOnRisk, target1, target2)
 
 - IF( # = "", duplicate from parent cell )
@@ -419,9 +422,7 @@ Target Gain = Loss Limit * ROR
 
 Loss Limit = $229
 ```
-
-
-## GetStop(pattern, support, resistance, stop_reference)
+## GetMarketStop(pattern, support, resistance, stop_reference)
 
 This function uses stop rules based on the given price pattern to calculate the market stop loss. The market stop loss is the price in the underlying at which we want to cut our losses.
 
@@ -439,3 +440,7 @@ There are 12 possible outcomes:
 1. Bearish Candlstick Low Percent: `stopReference + (stopReference * technicalStopRule.ExitRule)`
 1. Bullish Candlstick Low Fixed: `stopReference - technicalStopRule.ExitRule`
 1. Bearish Candlstick Low Fixed: `stopReference + technicalStopRule.ExitRule`
+
+## GetOptionStop(trade_order, premium, risk)
+
+This function calculates the stop loss based on option value. Default is 50% of the option's max loss (premium paid).
