@@ -462,4 +462,13 @@ DEFINITIONS:
 Length = Resistance - Support    <----- (length of flag pole)
 Run = Last R - Entry      <----- (price movement after entering the trade)
 Target Run = ( Difference + Target Value - Entry ) / Difference
+```
+
+## GetFlagPercent(pattern, support, resistance, entry_reference)
+
+This method calculates what percentage the expected move is against the price of the stock as a whole. A $5 move on a $100 stock is 5%. This is to determine if projected movements above a certain threshold are less likely to reach their target. For example, if the previous flag pole was 50% of the value of the stock, we probably don't expect another 50% move.
+
+```json
+FORMULA:
+Flag Pole Length / Current Price
 ``````

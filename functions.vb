@@ -1052,3 +1052,7 @@ Function GetPercentRun(support As Currency, resistance As Currency, entry_refere
 ErrorHandl:
     GetPercentRun = ""
 End Function
+
+Function GetFlagPercent(pattern As String, support As Currency, resistance As Currency, entry_reference As Currency)
+    If pattern Like "*Flag*" Then GetFlagPercent = Abs((resistance - support) / 1) Else GetFlagPercent = 0
+End Function
