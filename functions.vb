@@ -1027,3 +1027,14 @@ Function GetOptionStop(trade_order As String, premium As String, risk As String)
 ErrorHandl:
     GetOptionStop = ""
 End Function
+
+Function GetProtection(support As Currency, resistance As Currency, protection_reference As Currency)
+    If protection_reference = 0 Then GoTo ErrorHandl
+
+    postureAdjustment = IIf(IsBullish(support, resistance), 1, -1)
+
+    GetProtection = protection_reference - postureAdjustment * GetStopLossRule(FIXED_PROTECTION)
+    Exit Function
+ErrorHandl:
+    GetProtection = ""
+End Function

@@ -357,8 +357,8 @@ This data will be considered in crafting target rules.
 2. R1 Fixed Stop Loss - Resistance minus 20 cents
 1. S2 % Stop Loss - Support minus 1%
 1. S2 Fixed Stop Loss - Support minus 20 cents      
-1. P1 %
-1. P1 Fixed
+1. P1 % - New Candlestick Low minus 20 cents
+1. P1 Fixed - New Candlestick Low minus 1%
 1. Max Loss % - 50% of an option's max loss
 
 #### Spreadsheet Decisions
@@ -444,3 +444,7 @@ There are 12 possible outcomes:
 ## GetOptionStop(trade_order, premium, risk)
 
 This function calculates the stop loss based on option value. Default is 50% of the option's max loss (premium paid).
+
+## GetProtection(support, resistance, protection_reference)
+
+A protection rule is a response to an unexpected movement in a price pattern. If a candlestick in a bull flag moves lower than the previous day's low, this is an indicator that the bull flag may reverse before reaching it's target. In order to cut our losses, we put a protective stop 20 cents below the new low day.
