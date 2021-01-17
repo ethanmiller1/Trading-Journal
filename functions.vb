@@ -1,4 +1,4 @@
-Enum StopLossRule 
+Enum StopLossRule
   FIXED_RESISTANCE
   FIXED_SUPPORT
   FIXED_PROTECTION
@@ -7,16 +7,19 @@ Enum StopLossRule
   PERCENT_MAX_LOSS
 End Enum
 
+Public Const T1 As Double = 1.618
+Public Const T2 As Double = 2
+
 Function GetOptionType(trade_order As String)
     'If argument is null, return null.
     If trade_order = "" Then GoTo ErrorHandl
 
     'Create array to hold option types.
     Dim optionTypes As Variant
-    Dim optionType As Variant 
+    Dim optionType As Variant
 
     'Populate array with option types.
-    optionTypes = Array("IRON CONDOR","BUTTERFLY","CALENDAR","DIAGONAL","COMBO","VERTICAL","CALL","PUT")
+    optionTypes = Array("IRON CONDOR", "BUTTERFLY", "CALENDAR", "DIAGONAL", "COMBO", "VERTICAL", "CALL", "PUT")
 
     'Search each option type for a match in the trade_order string that indicates the option type.
     For Each optionType In optionTypes
@@ -40,7 +43,7 @@ ErrorHandl:
     GetOptionType = ""
 End Function
 
-Function GetNthWord(text As String, start_num As Integer, Optional num_words As Integer=1)
+Function GetNthWord(text As String, start_num As Integer, Optional num_words As Integer = 1)
 Dim current_pos As Long
 Dim char_len As Integer
 Dim current_word_num As Integer
@@ -85,10 +88,10 @@ Function GetExpiration(trade_order As String, Optional option_type As String = "
       expDate = expDay(1) & " " & GetNthWord(trade_order, 9, 2)
     'If option type matches case strings, return the 5th-7th word.
     Case "Call", "Put"
-      expDate = GetNthWord(trade_order,5,3)
+      expDate = GetNthWord(trade_order, 5, 3)
     'If option type is an Iron Condor, return the 7th-9th word.
     Case "Iron Condor"
-      expDate = GetNthWord(trade_order,7,3)
+      expDate = GetNthWord(trade_order, 7, 3)
     'If there is no match, return null.
     Case Else
       GoTo ErrorHandl
@@ -142,9 +145,9 @@ Function GetStrategy(trade_order As String, Optional option_type As String = "fa
 
       'Test market position.
       If InStr(trade_order, "BOT") Then
-        position = "Long"
+        Position = "Long"
       Else
-        position = "Short"
+        Position = "Short"
       End If
 
       'Test option type.
@@ -157,11 +160,11 @@ Function GetStrategy(trade_order As String, Optional option_type As String = "fa
     Select Case option_type
     Case "Vertical", "Diagonal"
      'Concatenate market position, option side, and option type to determine strategy.
-      strategy = position & " " & side &  " " & option_type
+      strategy = Position & " " & side & " " & option_type
     Case "Call", "Put"
-      strategy = position & " " & option_type
+      strategy = Position & " " & option_type
     Case "Combo"
-      strategy = position & " Synthetic"
+      strategy = Position & " Synthetic"
     Case Else
       'For Iron Condor, Butterfly, and Calendar.
       strategy = option_type
@@ -231,7 +234,7 @@ Function GetStockQuote(symobol As String, trade_date As Date)
     regPattern = "(({""date"":"")" & dateHyphenated & "[^}]*})"
 
     'Use regex to isolate single stock quote.
-    Set regex = CreateObject("VBScript.RegExp"): regex.Pattern = regPattern: regex.Global = False
+    Set regex = CreateObject("VBScript.RegExp"): regex.pattern = regPattern: regex.Global = False
     Set matches = regex.Execute(objHTTP.responseText)
     stockQuote = matches(0)
 
@@ -252,7 +255,7 @@ Function GetQuoteValue(quote_key As String, stock_quote As String)
     regPattern = """" & quote_key & """:([^,]*)"
 
     'Use regex to return the value of the key passed in.
-    Set regex = CreateObject("VBScript.RegExp"): regex.Pattern = regPattern: regex.Global = False
+    Set regex = CreateObject("VBScript.RegExp"): regex.pattern = regPattern: regex.Global = False
     Set matches = regex.Execute(stock_quote)
     quoteValue = matches(0).SubMatches(0)
 
@@ -280,7 +283,7 @@ Function GetPrem(trade_order As String, Optional option_type As String = "false"
     End Select
 
     'Remove @ symbol and add 0 to cast as numeric.
-    premium = Replace(premium,"@","") + 0
+    premium = Replace(premium, "@", "") + 0
 
     'Return the option premium.
     GetPrem = premium
@@ -510,7 +513,7 @@ Function GetPLClose(trade_order As String, option_type As String, prem As String
     If comm = 0 Then comm = GetCommission(trade_order)
 
     'How many shares being controlled?
-    contracts = Abs(GetNthWord(trade_order,2))
+    contracts = Abs(GetNthWord(trade_order, 2))
     shares = contracts * 100
     debit = premium * shares
 
@@ -521,8 +524,8 @@ Function GetPLClose(trade_order As String, option_type As String, prem As String
       plClose = maxProfit - debit
       'Skip comissions -- Max profits accounts for it.
     Case "Combo"
-      credit = Replace(GetNthWord(trade_order, 11),"@","") + 0
-      plClose = debit + (credit*shares) - comm
+      credit = Replace(GetNthWord(trade_order, 11), "@", "") + 0
+      plClose = debit + (credit * shares) - comm
     Case "Vertical"
       If InStr(trade_order, "SOLD") Then
         plClose = maxProfit - debit
@@ -642,8 +645,8 @@ Function GetOptionSignature(trade_order As String)
       types = Split(GetNthWord(trade_order, 10), "/")
       type1 = Left(types(0), 1)
       type2 = Left(types(1), 1)
-      strike = GetNthWord(trade_order, 9)
-      optionSignature = "." & signatureBase & type1 & strike & "-." & signatureBase & type2 & strike
+      Strike = GetNthWord(trade_order, 9)
+      optionSignature = "." & signatureBase & type1 & Strike & "-." & signatureBase & type2 & Strike
     Case Else
     End Select
     GetOptionSignature = optionSignature
@@ -677,7 +680,7 @@ Function GetCommission(trade_order As String)
     Case Else
     End Select
 
-    GetCommission = ( BASE_FEE + (Abs(qty) * FEE_PER_CONTRACT * noOfContracts ) ) * closedQty
+    GetCommission = (BASE_FEE + (Abs(qty) * FEE_PER_CONTRACT * noOfContracts)) * closedQty
     Exit Function
 ErrorHandl:
     GetCommission = ""
@@ -762,7 +765,7 @@ End Function
 
 Function GetPercentOfMaxProfit(max_profit As String, risk As String, actual_max_profit As String)
     If max_profit = "" Or actual_max_profit = "" Then GoTo ErrorHandl
-    If max_profit = "Undefined" Or Risk = "Undefined" Then GoTo Undefined
+    If max_profit = "Undefined" Or risk = "Undefined" Then GoTo Undefined
 
     precentOfMaxProfit = actual_max_profit / IIf(actual_max_profit > 0, max_profit, risk)
 
@@ -771,62 +774,66 @@ Function GetPercentOfMaxProfit(max_profit As String, risk As String, actual_max_
 Undefined:
     precentOfMaxProfit = 0
     GetPercentOfMaxProfit = precentOfMaxProfit
-    Exit Function   
+    Exit Function
 ErrorHandl:
     GetPercentOfMaxProfit = ""
 End Function
 
-Function GetTarget(support As String, resistance As String, entry As String, percent As Double)
-    If support = "" Or resistance = "" Then GoTo ErrorHandl
+Function GetTarget(support As Currency, resistance As Currency, entry As Currency, percent As Double)
+    If support = 0 Or resistance = 0 Then GoTo ErrorHandl
 
-    operator = IIf(support<resistance, 1, -1)
+    Operator = IIf(support < resistance, 1, -1)
 
-    If entry <> "" Then
-      target = entry + operator * ABS(resistance - support) * (percent - 1)
+    If entry <> 0 Then
+      Target = entry + Operator * Abs(resistance - support) * (percent - 1)
     Else
-      target = resistance + operator * ABS(resistance - support) * (percent - 1)
+      Target = resistance + Operator * Abs(resistance - support) * (percent - 1)
     End If
 
-    GetTarget = target
-    Exit Function 
+    GetTarget = Target
+    Exit Function
 ErrorHandl:
     GetTarget = ""
 End Function
 
-Function GetTarget1(support As String, resistance As String, entry As String)
+Function GetTarget1(support As Currency, resistance As Currency, entry As Currency)
     GetTarget1 = GetTarget(support, resistance, entry, 1.618)
 End Function
 
-Function GetTarget2(support As String, resistance As String, entry As String)
+Function GetTarget2(support As Currency, resistance As Currency, entry As Currency)
     GetTarget2 = GetTarget(support, resistance, entry, 2)
 End Function
 
 Private Function GetStopLossRule(ByVal rule As StopLossRule)
   Select Case rule
     Case StopLossRule.FIXED_RESISTANCE
-      stopLoss = .20
+      stopLoss = 0.2
     Case StopLossRule.FIXED_SUPPORT
-      stopLoss = .20
+      stopLoss = 0.2
     Case StopLossRule.FIXED_PROTECTION
-      stopLoss = .20
+      stopLoss = 0.2
     Case StopLossRule.PERCENT_RESISTANCE
-      stopLoss = .01
+      stopLoss = 0.01
     Case StopLossRule.PERCENT_SUPPORT
-      stopLoss = .01
+      stopLoss = 0.01
     Case StopLossRule.PERCENT_MAX_LOSS
-      stopLoss = .50
+      stopLoss = 0.5
     Case Else
       stopLoss = 0
   End Select
   GetStopLossRule = stopLoss
 End Function
 
-Function GetTDADefaultStopLoss(pattern As String, support As Currency, resistance As Currency, stopReference As String, entryReference As Currency, returnOnRisk As String, target1 As Currency, target2 As Currency, latestSupport As String)
+Function GetTDADefaultStopLoss(pattern As String, support As Currency, resistance As Currency, stopReference As String, entryReference As Currency, returnOnRisk As String, target_1 As String, target_2 As String, latestSupport As String)
     If latestSupport = "" Then GoTo ErrorHandl
 
     'Convert strings to currency
     Dim curStopReference As Currency
+    Dim target1 As Currency
+    Dim target2 As Currency
     If IsNumeric(stopReference) Then curStopReference = CCur(stopReference)
+    target1 = CCur(target_1)
+    target2 = CCur(target_2)
 
     postureAdjustment = IIf(IsBullish(support, resistance), 1, -1)
 
@@ -877,11 +884,11 @@ End Function
 Function GetTargetProfit(resistance As Currency, entry As Currency, target1 As Currency, target2 As Currency)
     If target1 = 0 And target2 = 0 Then GoTo ErrorHandl
 
-    'TODO: Which Target based on Pattern Target Realiability data
-    whichTarget = "T2"
+    'TODO: Which Target based on Pattern Target Realiability data (use WhichTarget)
+    ChosenTarget = "T2"
 
     'TODO: This is the max stock movement. Multiply this number by delta to get true max gain.
-    maxGain = Abs(IIf(whichTarget = "T1", target1, target2) - IIf(entry <> 0, entry, resistance))
+    maxGain = Abs(IIf(ChosenTarget = "T1", target1, target2) - IIf(entry <> 0, entry, resistance))
 
     GetTargetProfit = maxGain
     Exit Function
@@ -981,11 +988,11 @@ End Function
 Function GetMarketStop(pattern As String, support As Currency, resistance As Currency, stop_reference As String)
     If pattern = "" Then GoTo ErrorHandl
 
-    Dim technicalStopRule as StopRule
+    Dim technicalStopRule As StopRule
     Set technicalStopRule = GetTechnicalPriceRule(pattern)
     postureAdjustment = IIf(IsBullish(support, resistance), 1, -1)
     Dim priceLevel As Currency
-    Select Case technicalStopRule.PriceLevel
+    Select Case technicalStopRule.priceLevel
       Case "Support"
         priceLevel = support
       Case "Resistance"
@@ -1054,5 +1061,75 @@ ErrorHandl:
 End Function
 
 Function GetFlagPercent(pattern As String, support As Currency, resistance As Currency, entry_reference As Currency)
-    If pattern Like "*Flag*" Then GetFlagPercent = Abs((resistance - support) / 1) Else GetFlagPercent = 0
+    If pattern Like "*Flag*" Then GetFlagPercent = Abs((resistance - support) / entry_reference) Else GetFlagPercent = 0
+End Function
+
+Private Function DidTransgressStop(support As Currency, resistance As Currency, latest_support As Currency, market_stop As String)
+    If latest_support = 0 Then GoTo ErrorHandl
+    bullish = IsBullish(support, resistance)
+    marketStop = CDbl(market_stop)
+    DidTransgressStop = (bullish And latest_support < marketStop) Or (Not bullish And latest_support > marketStop)
+    Exit Function
+ErrorHandl:
+    DidTransgressStop = Nothing
+End Function
+
+Function WhichTarget(pattern As String, flag_pole_percent As String)
+    On Error GoTo ErrorHandl
+    If pattern = "" Then GoTo ErrorHandl
+
+    flagPolePercent = CDbl(flag_pole_percent)
+    colOffset = 15 'T1 % Advantage
+    t1Advantage = Application.WorksheetFunction.VLookup(pattern, [Target_Reliability_Table], colOffset, False)
+
+    'If Flag Pole Length is more than 12% of the value of the stock, use T1 | TODO: Make flagPoleRatio = MAX value that reached T2
+    flagPoleRatio = 0.12
+    profitDifference = T2 - T1
+
+    'If T1 reliability exceeds T2 reliability by 39% (2 - 1.61), use T1
+    WhichTarget = IIf(t1Advantage > profitDifference Or flagPolePercent > flagPoleRatio, T1, T2)
+    Exit Function
+ErrorHandl:
+    WhichTarget = Nothing
+End Function
+
+Private Function DidReachTarget(pattern As String, support As Currency, resistance As Currency, entry_reference As Currency, latest_resistance As Currency, flag_pole_percent As String)
+    On Error GoTo ErrorHandl
+    bullish = IsBullish(support, resistance)
+    Target = GetTarget(support, resistance, entry_reference, WhichTarget(pattern, flag_pole_percent))
+    DidReachTarget = (bullish And latest_resistance > Target) Or (Not bullish And latest_resistance < Target)
+    Exit Function
+ErrorHandl:
+    DidReachTarget = Nothing
+End Function
+
+Private Function WasStopTriggered(pattern As String, support As Currency, resistance As Currency, entry_reference As Currency, latest_resistance As Currency, latest_support As Currency, flag_pole_percent As String, market_stop As String, latest_resistance_date As Date, latest_support_date As Date)
+    On Error GoTo ErrorHandl
+    stopReached = DidTransgressStop(support, resistance, latest_support, market_stop)
+    targetReached = DidReachTarget(pattern, support, resistance, entry_reference, latest_resistance, flag_pole_percent)
+    ' Was stop triggered before target was reached?
+    WasStopTriggered = (stopReached And Not targetReached) Or (stopReached And targetReached And latest_support_date < latest_resistance_date)
+    Exit Function
+ErrorHandl:
+    WasStopTriggered = Nothing
+End Function
+
+Function GetRuleAffect(pattern As String, support As Currency, resistance As Currency, entry_reference As Currency, latest_resistance As Currency, latest_support As Currency, flag_pole_percent As String, market_stop As String, latest_resistance_date As Date, latest_support_date As Date)
+    If market_stop = "" Or (latest_resistance = 0 And latest_support = 0) Then GoTo ErrorHandl
+
+    targetReached = DidReachTarget(pattern, support, resistance, entry_reference, latest_resistance, flag_pole_percent)
+    stopTriggered = WasStopTriggered(pattern, support, resistance, entry_reference, latest_resistance, latest_support, flag_pole_percent, market_stop, latest_resistance_date, latest_support_date)
+
+    Select Case True
+      Case stopTriggered And targetReached
+        GetRuleAffect = "Damaged"
+      Case stopTriggered And Not targetReached
+        GetRuleAffect = "Saved"
+      Case Else
+        GetRuleAffect = "Unaffected"
+    End Select
+
+    Exit Function
+ErrorHandl:
+    GetRuleAffect = ""
 End Function

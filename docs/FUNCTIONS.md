@@ -471,4 +471,54 @@ This method calculates what percentage the expected move is against the price of
 ```json
 FORMULA:
 Flag Pole Length / Current Price
-``````
+```
+
+## DidTransgressStop(support, resistance, latest_support, market_stop)
+
+This method determines if a stop rule would have triggered an exit based on real price movement reaching it. Did support move below our stop so as to trigger it?
+
+The following usage would return `True`.
+
+```Excel
+?TransgressionTest(30.36, 32.35, 31.25, "31.26")
+```
+
+## WhichTarget(pattern, flag_pole_percent)
+
+The following usage would return `2`.
+
+```Excel
+?WhichTarget("Flag", .063)
+```
+43004.00
+42992.00
+
+## DidReachTarget(pattern, support, resistance, entry_reference, latest_resistance, flag_pole_percent)
+
+The following usage would return `True`.
+
+```Excel
+?DidReachTarget("Flag",30.36,32.35,31.78,34.10,".0623")
+```
+
+## WasStopTriggered(pattern, support, resistance, entry_reference, latest_resistance, latest_support, flag_pole_percent, market_stop, latest_resistance_date, latest_support_date)
+
+The following usage would return `False`.
+
+```Excel
+?WasStopTriggered("Flag",30.36,32.35,31.78,34.10,31.91,".0623","31.26",43004,42992)
+```
+
+## GetRuleAffect(pattern, support, resistance, entry_reference, latest_resistance, latest_support, flag_pole_percent, market_stop, latest_resistance_date, latest_support_date)
+
+A utility test shows the usefulness of a trading rule. Did our rule save us from losing money? Did it cause us to lose money? Or was our P/L unaffected by the rule? This method determines the answer based on whether or not the stop level was crossed before the target was reached. These are the 3 outcomes:
+
+1. Saved
+2. Damaged
+3. Unaffected
+
+The following usage would return `Saved`.
+
+```Excel
+?GetRuleAffect("Flag",30.36,32.35,31.78,32.95,31.19,".0623","31.26",43004,42992)
+```

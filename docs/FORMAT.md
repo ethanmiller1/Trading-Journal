@@ -37,3 +37,13 @@ I use rgb(234, 238, 225)
 `Home` > `Alignment` > `Increase Indent`
 
 ![](https://github.com/king-melchizedek/Trading-Journal/raw/master/images/cellPadding.gif)
+
+## Display 0% as blank
+
+`Right-click` > `Format Cells` > `Custom`, and then paste in:
+
+``` excel
+0.00%;(0.00%);""
+```
+
+![](https://i.ibb.co/dDPbQb1/image.png)
