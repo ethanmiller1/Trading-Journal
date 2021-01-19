@@ -187,7 +187,7 @@ Function GetPosture(option_strategy As String)
       posture = "Neutral"
     Case "Long Call", "Short Put", "Long Call Vertical", "Short Put Vertical", "Long Call Diagonal", "Long Synthetic"
       posture = "Bullish"
-    Case "Short Call", "Long Put", "Long Put Diagonal", "Short Synthetic"
+    Case "Short Call", "Long Put", "Short Call Vertical", "Long Put Vertical", "Long Put Diagonal", "Short Synthetic"
       posture = "Bearish"
     End Select
 
@@ -1020,16 +1020,14 @@ Function GetOptionStop(trade_order As String, premium As String, risk As String)
       'We don't want to consider comissions in our max stop
       qty = GetNthWord(trade_order, 2)
       rsk = CDbl(risk)
-      optionStop = (rsk - GetCommission(trade_order)) / qty / 100 * optionStopRule.ExitRule + prem
+      GetOptionStop = (rsk - GetCommission(trade_order)) / qty / 100 * optionStopRule.ExitRule + prem
     Else
       If optionStopRule.AmountType = "Percent" Then
-        optionStop = prem * optionStopRule.ExitRule
+        GetOptionStop = prem * optionStopRule.ExitRule
       Else
-        optionStop = prem + optionStopRule.ExitRule
+        GetOptionStop = prem + optionStopRule.ExitRule
       End If
     End If
-
-    GetOptionStop = optionStop
     Exit Function
 ErrorHandl:
     GetOptionStop = ""
@@ -1115,7 +1113,8 @@ ErrorHandl:
 End Function
 
 Function GetRuleAffect(pattern As String, support As Currency, resistance As Currency, entry_reference As Currency, latest_resistance As Currency, latest_support As Currency, flag_pole_percent As String, market_stop As String, latest_resistance_date As Date, latest_support_date As Date)
-    If market_stop = "" Or (latest_resistance = 0 And latest_support = 0) Then GoTo ErrorHandl
+    On Error GoTo ErrorHandl
+    If market_stop = "" Or latest_resistance = 0 Or latest_support = 0 Then GoTo ErrorHandl
 
     targetReached = DidReachTarget(pattern, support, resistance, entry_reference, latest_resistance, flag_pole_percent)
     stopTriggered = WasStopTriggered(pattern, support, resistance, entry_reference, latest_resistance, latest_support, flag_pole_percent, market_stop, latest_resistance_date, latest_support_date)
@@ -1132,4 +1131,49 @@ Function GetRuleAffect(pattern As String, support As Currency, resistance As Cur
     Exit Function
 ErrorHandl:
     GetRuleAffect = ""
+End Function
+
+Private Function DidPremiumTransgressOptionStop(trade_order As String, strategic_stop As Currency, worst_premium As Currency)
+    On Error GoTo ErrorHandl
+    If trade_order = "" Or worst_premium = 0 Then GoTo ErrorHandl
+    DidPremiumTransgressOptionStop = (trade_order Like "*BOT*" And worst_premium < strategic_stop) Or (trade_order Like "*SOLD*" And worst_premium > strategic_stop)
+    Exit Function
+ErrorHandl:
+    DidPremiumTransgressOptionStop = Nothing
+End Function
+
+Private Function WasOptionStopTriggered(trade_order As String, pattern As String, support As Currency, resistance As Currency, entry_reference As Currency, latest_resistance As Currency, worst_premium As Currency, flag_pole_percent As String, strategic_stop As Currency, latest_resistance_date As Date, worst_premium_date As Date)
+    On Error GoTo ErrorHandl
+    stopReached = DidPremiumTransgressOptionStop(trade_order, strategic_stop, worst_premium)
+    targetReached = DidReachTarget(pattern, support, resistance, entry_reference, latest_resistance, flag_pole_percent)
+    'Was stop triggered before target was reached?
+    'TODO: If worst_premium_date < entry_date, FALSE, add msg to user: Please choose date AFTER entry_date
+    WasOptionStopTriggered = (stopReached And Not targetReached) Or (stopReached And targetReached And worst_premium_date < latest_resistance_date)
+    Exit Function
+ErrorHandl:
+    WasOptionStopTriggered = Nothing
+End Function
+
+Function GetOptionRuleAffect(trade_order As String, pattern As String, support As Currency, resistance As Currency, entry_reference As Currency, latest_resistance_date As Date, latest_resistance As Currency, flag_pole_percent As String, strategic_stop As String, worst_premium_date As Date, worst_premium As Currency)
+    On Error GoTo ErrorHandl
+    If latest_resistance = 0 Or worst_premium = 0 Then GoTo ErrorHandl
+    bullishMarket = IIf(IsBullish(support, resistance), "Bullish", "Bearish")
+    bullishStrategy = GetPosture(GetStrategy(trade_order))
+    If bullishMarket <> bullishStrategy Then GoTo ErrorHandl
+
+    targetReached = DidReachTarget(pattern, support, resistance, entry_reference, latest_resistance, flag_pole_percent)
+    stopTriggered = WasOptionStopTriggered(trade_order, pattern, support, resistance, entry_reference, latest_resistance, worst_premium, flag_pole_percent, CCur(strategic_stop), worst_premium_date, latest_resistance_date)
+
+    Select Case True
+      Case stopTriggered And targetReached
+        GetOptionRuleAffect = "Damaged"
+      Case stopTriggered And Not targetReached
+        GetOptionRuleAffect = "Saved"
+      Case Else
+        GetOptionRuleAffect = "Unaffected"
+    End Select
+
+    Exit Function
+ErrorHandl:
+    GetOptionRuleAffect = ""
 End Function

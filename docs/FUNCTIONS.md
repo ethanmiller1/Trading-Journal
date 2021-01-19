@@ -490,8 +490,6 @@ The following usage would return `2`.
 ```Excel
 ?WhichTarget("Flag", .063)
 ```
-43004.00
-42992.00
 
 ## DidReachTarget(pattern, support, resistance, entry_reference, latest_resistance, flag_pole_percent)
 
@@ -521,4 +519,26 @@ The following usage would return `Saved`.
 
 ```Excel
 ?GetRuleAffect("Flag",30.36,32.35,31.78,32.95,31.19,".0623","31.26",43004,42992)
+```
+
+## WasOptionStopTriggered(trade_order, pattern, support, resistance, entry_reference, latest_resistance, worst_premium, flag_pole_percent, strategic_stop, latest_resistance_date, worst_premium_date)
+
+The following usage would return `False`.
+
+```Excel
+?WasStopTriggered("Flag",30.36,32.35,31.78,34.10,31.91,".0623","31.26",43004,42992)
+```
+
+## GetOptionRuleAffect(trade_order, pattern, support, resistance, entry_reference, latest_resistance_date, latest_resistance, flag_pole_percent, strategic_stop, worst_premium_date, worst_premium)
+
+A utility test shows the usefulness of a trading rule. Did our rule save us from losing money? Did it cause us to lose money? Or was our P/L unaffected by the rule? This method determines the answer based on whether or not the stop level was crossed before the target was reached. These are the 3 outcomes:
+
+1. Saved
+2. Damaged
+3. Unaffected
+
+The following usage would return `Saved`.
+
+```Excel
+?GetOptionRuleAffect("SOLD -1 VERTICAL AAL 100 19 JAN 18 52.5/50 PUT @1.31", "Flag", 30.36, 32.35, 31.78, 43004, 32.95, ".0623", "0.66", "31.26", 0.80, 42992)
 ```

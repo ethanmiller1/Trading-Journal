@@ -2,7 +2,7 @@ Enum StopLossFields
   CONDITIONAL_TRIGGER
   PRICE_LEVEL
   AMOUNT_TYPE
-  R1_PERCENT_PROFIT
+  AMOUNT_VALUE
   R1_PERCENT_DAMAGES
   R1_PERCENT_SAVES
   R1_PERCENT_DIFFERENCE
@@ -69,19 +69,22 @@ Private Function CreateStopRule(name As String, table As range) As StopRule
     PriceLevel = GetStopRule(name, PRICE_LEVEL, table)
     AmountType = GetStopRule(name, AMOUNT_TYPE, table)
 
-    whichRule = IIf(PriceLevel = "Resistance", 0, 2) + IIf(AmountType = "Percent", 1, 2) + IIf(ConditionalTrigger = "Option", 4, 0)
-    Select Case whichRule
-      Case 1
-        ExitRule = R1_PERCENT_EXIT_RULE
-      Case 2
-        ExitRule = R1_FIXED_EXIT_RULE
-      Case 3
-        ExitRule = S2_PERCENT_EXIT_RULE
-      Case 4
-        ExitRule = S2_FIXED_EXIT_RULE
-      Case Else
-        ExitRule = MAX_LOSS_PERCENT_EXIT_RULE
-    End Select
+    ' whichRule = IIf(PriceLevel = "Resistance", 0, 2) + IIf(AmountType = "Percent", 1, 2) + IIf(ConditionalTrigger = "Option", 4, 0)
+    ' Select Case whichRule
+    '   Case 1
+    '     ExitRule = R1_PERCENT_EXIT_RULE
+    '   Case 2
+    '     ExitRule = R1_FIXED_EXIT_RULE
+    '   Case 3
+    '     ExitRule = S2_PERCENT_EXIT_RULE
+    '   Case 4
+    '     ExitRule = S2_FIXED_EXIT_RULE
+    '   Case Else
+    '     ExitRule = MAX_LOSS_PERCENT_EXIT_RULE
+    ' End Select
+
+    'Uncomment above logic to use redundant rule table
+    ExitRule = AMOUNT_VALUE
 
     With stop_rule
       .name = name
