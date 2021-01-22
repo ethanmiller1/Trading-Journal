@@ -542,3 +542,19 @@ The following usage would return `Saved`.
 ```Excel
 ?GetOptionRuleAffect("SOLD -1 VERTICAL AAL 100 19 JAN 18 52.5/50 PUT @1.31", "Flag", 30.36, 32.35, 31.78, 43004, 32.95, ".0623", "0.66", "31.26", 0.80, 42992)
 ```
+
+## SumByStrategy(strategy, range_to_sum, sum_profits)
+
+```Excel
+?SumRangeData("Short Put Vertical", [PL_Closed], TRUE)
+```
+
+## CountByStrategy(strategy, range_to_count, count_profits)
+
+```Excel
+?SumRangeData("Short Put Vertical", [PL_Closed], TRUE)
+```
+
+## SumComissionsByStrategy(strategy)
+
+## AverageDaysInTrade(strategy)

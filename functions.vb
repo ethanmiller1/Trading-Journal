@@ -1177,3 +1177,91 @@ Function GetOptionRuleAffect(trade_order As String, pattern As String, support A
 ErrorHandl:
     GetOptionRuleAffect = ""
 End Function
+
+Function SumByStrategy(strategy As String, range_to_sum As Range, sum_profits As Boolean)
+    
+    On Error GoTo ErrorHandl
+    Dim tradeOrderRange As Range
+    Set tradeOrderRange = Range("Option_Data")
+    Dim cell As Range
+    Total = 0
+    Index = 1
+    For Each cell In range_to_sum
+        On Error Resume Next
+        If strategy = GetStrategy(tradeOrderRange(Index).Value) And IIf(sum_profits, cell.Value > 0, cell.Value < 0) Then
+            Total = Total + cell.Value
+        End If
+        Index = Index + 1
+    Next cell
+    SumByStrategy = Total
+    Exit Function
+ErrorHandl:
+    SumByStrategy = ""
+End Function
+
+Function CountByStrategy(strategy As String, range_to_count As Range, count_profits As Boolean)
+    
+    On Error GoTo ErrorHandl
+    Dim tradeOrderRange As Range
+    Set tradeOrderRange = Range("Option_Data")
+    Dim cell As Range
+    Total = 0
+    Index = 1
+    For Each cell In range_to_count
+        On Error Resume Next
+        If strategy = GetStrategy(tradeOrderRange(Index).Value) And IIf(count_profits, cell.Value > 0, cell.Value < 0) Then
+            Total = Total + 1
+        End If
+        Index = Index + 1
+    Next cell
+    CountByStrategy = Total
+    Exit Function
+ErrorHandl:
+    CountByStrategy = ""
+End Function
+
+Function SumComissionsByStrategy(strategy As String)
+    On Error GoTo ErrorHandl
+    Dim tradeOrderRange As Range
+    Set tradeOrderRange = Range("Option_Data")
+    Dim cell As Range
+    Total = 0
+    Index = 1
+    For Each cell In tradeOrderRange
+        On Error Resume Next
+        If strategy = GetStrategy(cell.Value) Then
+            Total = Total + GetCommission(cell.Value)
+        End If
+        Index = Index + 1
+    Next cell
+    SumByStrategy = Total
+    Exit Function
+ErrorHandl:
+    SumByStrategy = ""
+End Function
+
+Function AverageDaysInTrade(strategy As String)
+    On Error GoTo ErrorHandl
+    Dim tradeOrderRange As Range
+    Set tradeOrderRange = Range("Option_Data")
+    Dim entryDates As Range
+    Set entryDates = Range("Entry_Date")
+    Dim exitDates As Range
+    Set exitDates = Range("Exit_Date")
+    Dim cell As Range
+    totalDaysInTrade = 0
+    closedTrades = 0
+    Index = 1
+    For Each exitDate In exitDates
+        On Error Resume Next
+        If strategy = GetStrategy(tradeOrderRange(Index).Value) And exitDate.Value <> "" Then
+            totalDaysInTrade = totalDaysInTrade + DateDiff("D", entryDates(Index).Value, exitDate.Value)
+            closedTrades = closedTrades + 1
+        End If
+        Index = Index + 1
+    Next exitDate
+    AverageDaysInTrade = totalDaysInTrade / closedTrades
+    Exit Function
+ErrorHandl:
+    AverageDaysInTrade = ""
+End Function
