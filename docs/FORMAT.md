@@ -69,5 +69,35 @@ I use `#A6A6A6` and the double bottom border. The font is all caps `Verdana` wit
 
 ![](https://i.ibb.co/nj0MLf1/image.png)
 
+![](https://i.ibb.co/2gMgxYH/image.png)
+
 ![](https://i.ibb.co/1Kt9WjQ/image.png)
 
+![](https://i.ibb.co/rkNq4Dq/image.png)
+
+### Format Gridlines
+
+![](https://i.ibb.co/2Ktw8Y0/image.png)
+
+![](https://i.ibb.co/MM9MGsK/image.png)
+
+### Remove Chart Border
+
+![](https://i.ibb.co/8zG61x1/image.png)
+
+### Format Axis
+
+![](https://i.ibb.co/mDcw78q/image.png)
+
+### Display negative and positive numbers in same direction
+
+This can be achieved by converting the loss column to positive values. Use the following format to indicate they are negative numbers.
+
+```excel
+_($* (#,##0)" ";_($* #,##0_)" ";"";_(@_)" "
+```
+![](https://i.ibb.co/tM1Vn7p/image.png)
+
+### Choose specific label intervals
+
+![](https://i.ibb.co/HTCcDDM/image.png)
