@@ -129,3 +129,11 @@ Change Chart Type to Stacked Column, select the small data series, and change to
 ### Resize
 
 ![](https://i.ibb.co/6tpZvtF/image.png)
+
+## Abreviate large numbers
+
+[Apply Conditional Formatting to Shapes in Excel](https://www.youtube.com/watch?v=o24yr9Oc7l0)
+
+```
+[>=1000]$#,##0.0,"K";[Red][>=1000]($#,##0.0,"K");""
+```

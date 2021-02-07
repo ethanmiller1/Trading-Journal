@@ -1253,3 +1253,20 @@ Function AverageDaysInTrade(strategy As String, trade_order_range As range, entr
 ErrorHandl:
     AverageDaysInTrade = ""
 End Function
+
+Public Function FormatMoney(value As Currency)
+    On Error GoTo ErrorHandl 
+Select Case value
+    Case Is < 1000
+        FormatMoney = Format(value, "$###")
+    Case 1000 To 9999
+        FormatMoney = Format(value / 1000, "$#.0K")
+    Case 10000 To 999999
+        FormatMoney = Format(value / 1000, "$###K")
+    Case Is >= 1000000
+        FormatMoney = Format(value / 1000000, "$#.0M")
+    End Select
+    Exit Function
+ErrorHandl:
+    FormatMoney = ""
+End Function
