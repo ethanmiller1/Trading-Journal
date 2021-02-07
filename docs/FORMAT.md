@@ -4,7 +4,7 @@
 
 Use conditional formatting make the color of column A indicate its market posture.
 
-``` excel
+```excel
 =GetPosture(GetStrategy($A7,$D7))="Neutral"
 =GetPosture(GetStrategy($A7,$D7))="Bullish"
 =GetPosture(GetStrategy($A7,$D7))="Bearish"
@@ -16,7 +16,7 @@ Use conditional formatting make the color of column A indicate its market postur
 
 `Right-click` > `Format Cells` > `Custom`, and then paste in:
 
-``` excel
+```excel
 [$-en-US]mmm;
 ```
 
@@ -24,13 +24,13 @@ Use conditional formatting make the color of column A indicate its market postur
 
 Create a new rule in conditional formatting, select `Use a formula to determine which cells to format`, and then:
 
-``` excel
+```excel
 =MOD(ROW(),2)=1
 ```
 
 ![](https://github.com/king-melchizedek/Trading-Journal/raw/master/images/colorShade.png)
 
-I use rgb(234, 238, 225) 
+I use rgb(234, 238, 225)
 
 ## Add cell padding
 
@@ -45,11 +45,12 @@ I use rgb(234, 238, 225)
 ![](https://i.ibb.co/gZ4NMgV/image.png)
 
 I use rgb(211, 221, 196) and the thickest line style
+
 ## Display 0% as blank
 
 `Right-click` > `Format Cells` > `Custom`, and then paste in:
 
-``` excel
+```excel
 0.00%;(0.00%);""
 ```
 
@@ -96,8 +97,35 @@ This can be achieved by converting the loss column to positive values. Use the f
 ```excel
 _($* (#,##0)" ";_($* #,##0_)" ";"";_(@_)" "
 ```
+
 ![](https://i.ibb.co/tM1Vn7p/image.png)
 
 ### Choose specific label intervals
 
 ![](https://i.ibb.co/HTCcDDM/image.png)
+
+## Thermometer bar
+
+Select 4 cells individually.
+
+![](https://i.ibb.co/qJQrz33/image.png)
+
+![](https://i.ibb.co/H7ffgqh/Untitled.png)
+
+### Display as percentage
+
+Change Chart Type to Stacked Column, select the small data series, and change to Secondary Axis.
+
+![](https://i.ibb.co/68kcC9s/image.png)
+
+### Change color
+
+![](https://i.ibb.co/NrtsWrL/image.png)
+
+### Add Tick Marks
+
+![](https://i.ibb.co/MMfDYYg/image.png)
+
+### Resize
+
+![](https://i.ibb.co/6tpZvtF/image.png)
