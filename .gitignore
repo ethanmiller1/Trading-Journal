@@ -1,3 +1,7 @@
 /source
 /*.xlsm
 /*.xlsx
+/*.log
+/*.iml
+.idea
+.vs
